@@ -14,4 +14,24 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
+  <!--pre-filter-->
+  <filter>
+    <filter-name>preFilter</filter-name>
+    <filter-class>filters.PreFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>preFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!--after-filter-->
+  <filter>
+    <filter-name>afterFilter</filter-name>
+    <filter-class>filters.AfterFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>afterFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
 </web-app>
