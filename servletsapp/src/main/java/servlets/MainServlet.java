@@ -7,11 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//defined in web.xml
-//@WebServlet(
-//    name = "mainServlet",
-//    urlPatterns = {"/hello"}
-//)
 public class MainServlet extends HttpServlet {
 
   @Override

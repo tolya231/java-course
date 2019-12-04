@@ -8,16 +8,24 @@
     <servlet-name>mainServlet</servlet-name>
     <servlet-class>servlets.MainServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>attributeServlet</servlet-name>
+    <servlet-class>servlets.AttributeServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>mainServlet</servlet-name>
-    <url-pattern>/</url-pattern>
+    <url-pattern>/hello</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>attributeServlet</servlet-name>
+    <url-pattern>/hi</url-pattern>
   </servlet-mapping>
 
   <!--pre-filter-->
   <filter>
     <filter-name>preFilter</filter-name>
-    <filter-class>filters.PreFilter</filter-class>
+    <filter-class>filters.PreProcessingFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>preFilter</filter-name>
@@ -26,12 +34,15 @@
 
   <!--after-filter-->
   <filter>
-    <filter-name>afterFilter</filter-name>
-    <filter-class>filters.AfterFilter</filter-class>
+    <filter-name>postFilter</filter-name>
+    <filter-class>filters.PostProcessingFilter</filter-class>
   </filter>
   <filter-mapping>
-    <filter-name>afterFilter</filter-name>
+    <filter-name>postFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <listener>
+    <listener-class>listeners.AppContextAttributeListener</listener-class>
+  </listener>
 </web-app>

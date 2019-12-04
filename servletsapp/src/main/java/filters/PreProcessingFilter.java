@@ -10,7 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-public class PreFilter implements Filter {
+public class PreProcessingFilter implements Filter {
 
   public void init(FilterConfig filterConfig) throws ServletException {
   }

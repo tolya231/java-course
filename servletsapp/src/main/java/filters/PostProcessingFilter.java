@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-public class AfterFilter implements Filter {
+public class PostProcessingFilter implements Filter {
 
   public void init(FilterConfig filterConfig) throws ServletException {
   }
