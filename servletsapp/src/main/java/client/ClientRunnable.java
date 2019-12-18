@@ -11,11 +11,12 @@ public class ClientRunnable implements Runnable {
   public void run() {
     HttpURLConnection connection = null;
     try {
-      URL url = new URL("http://localhost:8087/servlets_app_war/hi");
+      URL url = new URL("http://localhost:8080/hi");
       connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("GET");
       connection.getResponseCode();
     } catch (Exception e) {
+      System.out.println("---------------------");
       e.printStackTrace();
     } finally {
       if (connection != null) {

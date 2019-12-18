@@ -10,17 +10,18 @@ public class Client {
   public static void main(String[] args) {
     Client client = new Client();
     try {
-      client.executeTasksInFixedThreadPool(5, 5, 5);
+      client.executeTasksInFixedThreadPool(5, 10, 10);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
   }
 
-//  <Connector executor="myConnector"
+//<Connector executor="tomcatThreadPool"
 //  port="8080" protocol="HTTP/1.1"
 //  connectionTimeout="20"
 //  redirectPort="8443"
-//  acceptCount="1"
+//  acceptCount="2"
+//  maxConnections="-1"
 //  maxThreads="1"/>
 
   private Runnable createTask(int requestsAmount) {
