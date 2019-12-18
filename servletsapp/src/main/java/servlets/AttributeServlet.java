@@ -18,7 +18,7 @@ public class AttributeServlet extends HttpServlet
     String user = (String) ctx.getAttribute( "user" );
     ctx.removeAttribute( "user" );
     PrintWriter out = resp.getWriter();
-    doHardWork(2000);
+    doHardWork(1000);
     out.write( "Hi " + user );
   }
 
