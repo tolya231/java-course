@@ -18,14 +18,13 @@ public class AttributeServlet extends HttpServlet
     String user = (String) ctx.getAttribute( "user" );
     ctx.removeAttribute( "user" );
     PrintWriter out = resp.getWriter();
-    doHardWork(1000);
+    doHardWork(2000);
     out.write( "Hi " + user );
   }
 
   private void doHardWork(int mls) {
     try {
       Thread.sleep(mls);
-      System.out.println("in servlet");
     } catch (InterruptedException e) {
       e.printStackTrace();
     }

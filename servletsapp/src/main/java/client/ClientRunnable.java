@@ -12,7 +12,6 @@ public class ClientRunnable implements Runnable {
         HttpURLConnection connection = null;
         try {
             URL url = new URL("http://localhost:8087/servlets_app_war/hi");
-            System.out.println(1);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             boolean refused = connection.getResponseCode() != 200;
