@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 
 public class AttributeServlet extends HttpServlet
 {
+  private static final ThreadLocal<AttributeServlet> threadLocalScope = new  ThreadLocal<>();
+
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp ) throws ServletException, IOException
   {
@@ -24,6 +26,7 @@ public class AttributeServlet extends HttpServlet
 
   private void doHardWork(int mls) {
     try {
+      threadLocalScope.set(new AttributeServlet());
       Thread.sleep(mls);
     } catch (InterruptedException e) {
       e.printStackTrace();
