@@ -16,6 +16,7 @@
     <module>servletsapp</module>
     <module>maven/step45</module>
     <module>maven/step123</module>
+    <module>spring</module>
   </modules>
 
 </project>
