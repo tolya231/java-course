@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @ToString
 @Builder
 public class Dog {
+    private Long id;
     private String name;
     private LocalDate birthDate;
     private Integer weight;
