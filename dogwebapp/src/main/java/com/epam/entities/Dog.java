@@ -1,9 +1,10 @@
 package com.epam.entities;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -11,6 +12,8 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Dog {
     private Long id;
     private String name;
