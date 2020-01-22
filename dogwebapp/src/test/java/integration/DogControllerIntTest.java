@@ -67,8 +67,8 @@ public class DogControllerIntTest {
         .body("name", equalTo("beagle"))
         .body("weight", nullValue());
 
-    dog.setId(-1L);
-    given().baseUri(url).contentType(ContentType.JSON)
+    dog.setBirthDay(LocalDate.now());
+    given().baseUri(url + "/1").contentType(ContentType.JSON)
         .body(dog)
         .when().put().then()
         .statusCode(400);
