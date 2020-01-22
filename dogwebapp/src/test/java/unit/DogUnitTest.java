@@ -1,5 +1,8 @@
 package unit;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.epam.entities.Dog;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,13 +28,56 @@ public class DogUnitTest {
         .name("beagle")
         .height(20)
         .weight(20)
-        .birthDate(LocalDate.of(2020, 1, 22))
+        .birthDay(LocalDate.of(2020, 1, 21))
         .build();
   }
 
   @Test
-  public void testValidation() {
+  public void testIdValidation() {
     dog.setId(null);
     Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
+    assertFalse(violations.isEmpty());
+    dog.setId(-1L);
+    violations = validator.validate(dog);
+    assertFalse(violations.isEmpty());
+    dog.setId(129L);
+    violations = validator.validate(dog);
+    assertTrue(violations.isEmpty());
+  }
+
+  @Test
+  public void testNameValidation() {
+    Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
+    assertTrue(violations.isEmpty());
+    dog.setName("");
+    violations = validator.validate(dog);
+    assertFalse(violations.isEmpty());
+  }
+
+  @Test
+  public void testHeightValidation() {
+    Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
+    assertTrue(violations.isEmpty());
+    dog.setHeight(-5);
+    violations = validator.validate(dog);
+    assertFalse(violations.isEmpty());
+  }
+
+  @Test
+  public void testWeightValidation() {
+    Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
+    assertTrue(violations.isEmpty());
+    dog.setWeight(-17);
+    violations = validator.validate(dog);
+    assertFalse(violations.isEmpty());
+  }
+
+  @Test
+  public void testBirthdayValidation() {
+    Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
+    assertTrue(violations.isEmpty());
+    dog.setBirthDay(LocalDate.now().plusDays(1));
+    violations = validator.validate(dog);
+    assertFalse(violations.isEmpty());
   }
 }

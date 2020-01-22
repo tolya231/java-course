@@ -1,12 +1,16 @@
 package com.epam.entities;
 
-import lombok.*;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -16,15 +20,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Dog {
 
-  @Positive
-  @NotNull()
+  @Min(1)
+  @NotNull
   private Long id;
   @Size(min = 1, max = 100)
   private String name;
-  @PastOrPresent
-  private LocalDate birthDate;
-  @Positive
+  @Past
+  private LocalDate birthDay;
+  @Min(1)
   private Integer weight;
-  @Positive
+  @Min(1)
   private Integer height;
 }
