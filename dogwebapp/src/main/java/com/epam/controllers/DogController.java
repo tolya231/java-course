@@ -54,9 +54,13 @@ public class DogController {
 
   @PutMapping(value = "/{id}")
   public Dog putDog(@PathVariable Long id, @RequestBody @Valid Dog dog) {
-    Dog foundDog = dogs.stream().filter(d -> dog.getId().equals(id)).findFirst().get();
-    dogs.set(dogs.indexOf(foundDog), dog);
-    return dog;
+    Optional<Dog> foundDog = dogs.stream().filter(d -> dog.getId().equals(id)).findFirst();
+    if (foundDog.isPresent()) {
+      dogs.set(dogs.indexOf(foundDog.get()), dog);
+      return dog;
+    }
+    //todo
+    return null;
   }
 
   @DeleteMapping(value = "/{id}")
