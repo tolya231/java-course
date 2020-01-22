@@ -1,11 +1,11 @@
 package com.epam.entities;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Getter
@@ -15,9 +15,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Dog {
-    private Long id;
-    private String name;
-    private LocalDate birthDate;
-    private Integer weight;
-    private Integer height;
+
+  @Positive
+  @NotNull()
+  private Long id;
+  @Size(min = 1, max = 100)
+  private String name;
+  @PastOrPresent
+  private LocalDate birthDate;
+  @Positive
+  private Integer weight;
+  @Positive
+  private Integer height;
 }

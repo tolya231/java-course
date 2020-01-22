@@ -19,7 +19,7 @@ public class DogController {
         .name("Dog 1")
         .height(20)
         .weight(20)
-        .birthDate(LocalDate.now())
+        .birthDate(LocalDate.of(2020, 1, 22))
         .build();
     Dog dog2 = Dog.builder()
         .id(2L)
@@ -43,21 +43,11 @@ public class DogController {
     return dogs.stream().filter(dog -> dog.getId().equals(id)).findFirst().get();
   }
 
-  @PostMapping(value = "/{id}")
-  public Dog createDog(@PathVariable Long id) {
-    if (dogs.stream().noneMatch(dog -> dog.getId().equals(id))) {
-      Dog dog = Dog.builder()
-          .id(id)
-          .name("New dog")
-          .height(17)
-          .weight(30)
-          .birthDate(LocalDate.now())
-          .build();
-      dogs.add(dog);
-      return dog;
-    }
-    System.out.println("Dog already exists");
-    return null;
+  @PostMapping
+  public Dog createDog(@RequestBody Dog dog) {
+    dog.setId(new Random().nextLong());
+    dogs.add(dog);
+    return dog;
   }
 
   @PutMapping(value = "/{id}")
