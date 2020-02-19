@@ -2,7 +2,9 @@ package com.epam.controllers;
 
 import com.epam.entities.Dog;
 import com.epam.repositories.DogDao;
+import java.sql.SQLException;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,17 +20,17 @@ public class DogController {
 
   private DogDao dogDao;
 
-  public DogController(DogDao dogDao) {
+  public DogController(@Qualifier("jdbcDogDao") DogDao dogDao) {
     this.dogDao = dogDao;
   }
 
   @GetMapping(value = "/{id}")
-  public Dog getDog(@PathVariable Long id) {
+  public Dog getDog(@PathVariable Long id) throws SQLException {
     return dogDao.get(id);
   }
 
   @PostMapping
-  public Dog createDog(@RequestBody @Valid Dog dog) {
+  public Dog createDog(@RequestBody @Valid Dog dog) throws SQLException {
     return dogDao.create(dog);
   }
 

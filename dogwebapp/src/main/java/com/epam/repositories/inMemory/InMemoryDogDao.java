@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("inMemoryDogDao")
 public class InMemoryDogDao implements DogDao {
 
   private Map<Long, Dog> dogs;
