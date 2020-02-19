@@ -21,13 +21,17 @@ public class DogControllerIntTest {
         .setBirthDay(LocalDate.of(2020, 1, 21));
   }
 
-  @Test
-  public void when_getDogWithExistingId_then_DogReturned() {
-    Long id = given().baseUri(url)
+  private Dog createDog() {
+    return given().baseUri(url)
         .contentType(ContentType.JSON)
         .body(dog())
         .when().post().thenReturn()
-        .as(Dog.class, ObjectMapperType.JACKSON_2).getId();
+        .as(Dog.class, ObjectMapperType.JACKSON_2);
+  }
+
+  @Test
+  public void when_getDogWithExistingId_then_DogReturned() {
+    Long id = createDog().getId();
 
     Dog dog = given().baseUri(url + "/" + id)
         .when().get().thenReturn()
@@ -41,18 +45,14 @@ public class DogControllerIntTest {
 
   @Test
   public void when_getNotExistingDog_then_statusCode404() {
-    given().baseUri(url + "0")
+    given().baseUri(url + "/0")
         .when().get().then()
         .statusCode(404);
   }
 
   @Test
   public void when_createValidDog_then_createdSuccessfully() {
-    Dog dog = given().baseUri(url)
-        .contentType(ContentType.JSON)
-        .body(dog())
-        .when().post().thenReturn()
-        .as(Dog.class, ObjectMapperType.JACKSON_2);
+    Dog dog = createDog();
 
     assertEquals(dog.getName(), "beagle");
     assertEquals(dog.getWeight(), Integer.valueOf(20));
@@ -68,12 +68,7 @@ public class DogControllerIntTest {
 
   @Test
   public void when_updateDogSetEmptyWeight_then_updatedOnlyThisField() {
-    Dog dog = given().baseUri(url)
-        .contentType(ContentType.JSON)
-        .body(dog())
-        .when().post().thenReturn()
-        .as(Dog.class, ObjectMapperType.JACKSON_2)
-        .setWeight(null);
+    Dog dog = createDog().setWeight(null);
 
     Dog updated = given().baseUri(url + "/" + dog.getId())
         .contentType(ContentType.JSON)
@@ -87,12 +82,7 @@ public class DogControllerIntTest {
 
   @Test
   public void when_updateDogSetNotValidDate_then_statusCode400() {
-    Dog dog = given().baseUri(url)
-        .contentType(ContentType.JSON)
-        .body(dog())
-        .when().post().thenReturn()
-        .as(Dog.class, ObjectMapperType.JACKSON_2)
-        .setBirthDay(LocalDate.now());
+    Dog dog = createDog().setBirthDay(LocalDate.now());
 
     given().baseUri(url + "/" + dog.getId())
         .contentType(ContentType.JSON)
@@ -103,36 +93,22 @@ public class DogControllerIntTest {
 
   @Test
   public void when_deleteExistingDog_then_deletedSuccessfully() {
-    Long id = given().baseUri(url)
-        .contentType(ContentType.JSON)
-        .body(dog())
-        .when().post().thenReturn()
-        .as(Dog.class, ObjectMapperType.JACKSON_2)
-        .getId();
+    Long id = createDog().getId();
 
     given().baseUri(url + "/" + id)
         .when().delete().then()
         .statusCode(200);
-
-    given().baseUri(url + "0")
-        .when().delete().then()
-        .statusCode(404);
   }
 
   @Test
   public void when_deleteNotExistingDog_then_statusCode400() {
-    Long id = given().baseUri(url)
-        .contentType(ContentType.JSON)
-        .body(dog())
-        .when().post().thenReturn()
-        .as(Dog.class, ObjectMapperType.JACKSON_2)
-        .getId();
+    Long id = createDog().getId();
 
     given().baseUri(url + "/" + id)
         .when().delete();
 
-    given().baseUri(url + url + "/" + id)
+    given().baseUri(url + "/" + id)
         .when().delete().then()
-        .statusCode(400);
+        .statusCode(404);
   }
 }

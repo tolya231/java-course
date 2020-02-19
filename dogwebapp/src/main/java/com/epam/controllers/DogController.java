@@ -1,6 +1,7 @@
 package com.epam.controllers;
 
 import com.epam.entities.Dog;
+import com.epam.exceptions.ResourceNotFoundException;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,7 +51,12 @@ public class DogController {
 
   @GetMapping(value = "/{id}")
   public Dog getDog(@PathVariable Long id) {
-    return dogs.get(id);
+    Dog dog = dogs.get(id);
+    if (dog == null) {
+      throw new ResourceNotFoundException();
+    } else {
+      return dog;
+    }
   }
 
   @PostMapping
@@ -67,11 +73,15 @@ public class DogController {
       dogs.put(foundDog.getId(), dog);
       return dog;
     }
-    return null;
+    throw new ResourceNotFoundException();
   }
 
   @DeleteMapping(value = "/{id}")
   public void deleteDog(@PathVariable Long id) {
-    dogs.remove(id);
+    Dog dog = dogs.remove(id);
+    if (dog == null) {
+      throw new ResourceNotFoundException();
+    }
+
   }
 }
