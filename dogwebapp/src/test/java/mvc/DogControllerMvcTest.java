@@ -1,63 +1,65 @@
 package mvc;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.testng.Assert.assertEquals;
 
-import com.epam.controllers.DogController;
-import com.epam.entities.Dog;
+import com.epam.dto.DogDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
+import java.util.Collections;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.testng.annotations.BeforeMethod;
+import org.springframework.web.context.WebApplicationContext;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import utils.DogGenerator;
 
-public class DogControllerMvcTest {
+@WebAppConfiguration
+@ContextConfiguration(locations = {"file:**/app-config.xml", "file:**/web-config.xml"})
+public class DogControllerMvcTest extends AbstractTestNGSpringContextTests {
 
+  @Autowired
+  private WebApplicationContext wac;
   private MockMvc mockMvc;
   private String url = "http://localhost:8080/dog";
   private ObjectMapper objectMapper;
 
-
-  private static Dog dog() {
-    return new Dog()
-        .setName("beagle")
-        .setHeight(20)
-        .setWeight(20)
-        .setBirthDay(LocalDate.of(2020, 1, 21));
-  }
-
-  private Dog createDog() throws Exception {
+  private DogDto createDog() throws Exception {
     String dogResponse = mockMvc.perform(MockMvcRequestBuilders.post(url)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(dog())))
+        .content(objectMapper.writeValueAsString(DogGenerator.dog())))
         .andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString();
-    return objectMapper.readValue(dogResponse, Dog.class);
+    return objectMapper.readValue(dogResponse, DogDto.class);
   }
 
-  @BeforeMethod
-  public void setUp() throws Exception {
-    MockMvcBuilders.standaloneSetup(DogController.class);
-    mockMvc = MockMvcBuilders.standaloneSetup(DogController.class).build();
+
+  @BeforeClass
+  public void setUp() {
+    mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     objectMapper = new ObjectMapper();
     objectMapper.findAndRegisterModules();
   }
 
   @Test
   public void when_getDogWithExistingId_then_DogReturned() throws Exception {
-    Dog dog = createDog();
+    DogDto dog = createDog();
 
     String response = mockMvc.perform(MockMvcRequestBuilders.get(url + "/" + dog.getId())
         .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString();
-    assertEquals(dog, objectMapper.readValue(response, Dog.class));
+    EqualsBuilder.reflectionEquals(dog, objectMapper.readValue(response, DogDto.class),
+        Collections.singletonList("id"));
 
   }
 
@@ -71,8 +73,8 @@ public class DogControllerMvcTest {
 
   @Test
   public void when_createValidDog_then_createdSuccessfully() throws Exception {
-    Dog dog = createDog();
-    assertEquals(dog().setId(dog.getId()), dog);
+    DogDto dog = createDog();
+    EqualsBuilder.reflectionEquals(DogGenerator.dog(), dog, Collections.singletonList("id"));
 
   }
 
@@ -80,14 +82,14 @@ public class DogControllerMvcTest {
   public void when_createNotValidDog_then_statusCode400() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.post(url)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(dog().setWeight(-1))))
+        .content(objectMapper.writeValueAsString(DogGenerator.dog().setWeight(-1))))
         .andDo(MockMvcResultHandlers.print())
         .andExpect(status().isBadRequest());
   }
 
   @Test
-  public void when_updateDogSetEmptyWeight_then_updatedOnlyThisField() throws Exception {
-    Dog dog = createDog().setWeight(null);
+  public void when_updateDogSetWeight1_then_updated() throws Exception {
+    DogDto dog = createDog().setWeight(1);
 
     String updated = mockMvc.perform(MockMvcRequestBuilders.put(url + "/" + dog.getId())
         .contentType(MediaType.APPLICATION_JSON)
@@ -96,12 +98,13 @@ public class DogControllerMvcTest {
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString();
 
-    assertEquals(dog, objectMapper.readValue(updated, Dog.class));
+    EqualsBuilder.reflectionEquals(dog, objectMapper.readValue(updated, DogDto.class),
+        Collections.singletonList("id"));
   }
 
   @Test
   public void when_updateDogSetNotValidDate_then_statusCode400() throws Exception {
-    Dog dog = createDog().setBirthDay(LocalDate.now());
+    DogDto dog = createDog().setBirthDay(LocalDate.now());
 
     mockMvc.perform(MockMvcRequestBuilders.put(url + "/" + dog.getId())
         .contentType(MediaType.APPLICATION_JSON)
