@@ -1,46 +1,38 @@
 package integration;
 
 import static io.restassured.RestAssured.given;
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
-import com.epam.entities.Dog;
+import com.epam.dto.DogDto;
 import io.restassured.http.ContentType;
 import io.restassured.mapper.ObjectMapperType;
 import java.time.LocalDate;
+import java.util.Collections;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.testng.annotations.Test;
+import utils.DogGenerator;
 
 public class DogControllerIntTest {
 
   private String url = "http://localhost:8080/dog";
 
-  private static Dog dog() {
-    return new Dog()
-        .setName("beagle")
-        .setHeight(20)
-        .setWeight(20)
-        .setBirthDay(LocalDate.of(2020, 1, 21));
-  }
-
-  private Dog createDog() {
+  private DogDto createDog() {
     return given().baseUri(url)
         .contentType(ContentType.JSON)
-        .body(dog())
+        .body(DogGenerator.dog())
         .when().post().thenReturn()
-        .as(Dog.class, ObjectMapperType.JACKSON_2);
+        .as(DogDto.class, ObjectMapperType.JACKSON_2);
   }
 
   @Test
   public void when_getDogWithExistingId_then_DogReturned() {
-    Long id = createDog().getId();
+    DogDto createdDog = createDog();
 
-    Dog dog = given().baseUri(url + "/" + id)
+    DogDto dog = given().baseUri(url + "/" + createdDog.getId())
         .when().get().thenReturn()
-        .as(Dog.class, ObjectMapperType.JACKSON_2);
+        .as(DogDto.class, ObjectMapperType.JACKSON_2);
 
-    assertEquals(dog.getId(), id);
-    assertEquals(dog.getName(), "beagle");
-    assertEquals(dog.getWeight(), Integer.valueOf(20));
-    assertEquals(dog.getHeight(), Integer.valueOf(20));
+    EqualsBuilder.reflectionEquals(dog, createdDog, Collections.singletonList("id"));
   }
 
   @Test
@@ -52,37 +44,41 @@ public class DogControllerIntTest {
 
   @Test
   public void when_createValidDog_then_createdSuccessfully() {
-    Dog dog = createDog();
+    DogDto dog = DogGenerator.dog();
+    DogDto createdDog = given().baseUri(url)
+        .contentType(ContentType.JSON)
+        .body(dog)
+        .when().post().thenReturn()
+        .as(DogDto.class, ObjectMapperType.JACKSON_2);
 
-    assertEquals(dog.getName(), "beagle");
-    assertEquals(dog.getWeight(), Integer.valueOf(20));
+    EqualsBuilder.reflectionEquals(dog, createdDog, Collections.singletonList("id"));
+    assertNotNull(createdDog.getId());
   }
 
   @Test
   public void when_createNotValidDog_then_statusCode400() {
     given().baseUri(url).contentType(ContentType.JSON)
-        .body(dog().setWeight(-1))
+        .body(DogGenerator.dog().setWeight(-1))
         .when().post().then()
         .statusCode(400);
   }
 
   @Test
-  public void when_updateDogSetEmptyWeight_then_updatedOnlyThisField() {
-    Dog dog = createDog().setWeight(null);
+  public void when_updateDogSetWeight1_then_updated() {
+    DogDto dog = createDog().setWeight(1);
 
-    Dog updated = given().baseUri(url + "/" + dog.getId())
+    DogDto updatedDog = given().baseUri(url + "/" + dog.getId())
         .contentType(ContentType.JSON)
         .body(dog)
         .when().put().thenReturn()
-        .as(Dog.class, ObjectMapperType.JACKSON_2);
-    assertEquals(updated.getName(), "beagle");
-    assertEquals(updated.getWeight(), null);
-    assertEquals(updated.getHeight(), Integer.valueOf(20));
+        .as(DogDto.class, ObjectMapperType.JACKSON_2);
+    EqualsBuilder.reflectionEquals(dog, updatedDog, Collections.singletonList("id"));
+
   }
 
   @Test
   public void when_updateDogSetNotValidDate_then_statusCode400() {
-    Dog dog = createDog().setBirthDay(LocalDate.now());
+    DogDto dog = createDog().setBirthDay(LocalDate.now());
 
     given().baseUri(url + "/" + dog.getId())
         .contentType(ContentType.JSON)
