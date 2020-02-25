@@ -19,12 +19,10 @@ public class JdbcDogDao {
       String createSchemaSql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " "
           + "("
           + "    id IDENTITY NOT NULL PRIMARY KEY, "
-          + "    name     VARCHAR(100), "
-          + "    weight   INT, "
-          + "    height   INT, "
-          + "    birthDay DATE, "
-          + "    CHECK (weight >= 1), "
-          + "    CHECK (height >= 1) "
+          + "    name     VARCHAR(100) NOT NULL CHECK (length(name) >= 1), "
+          + "    weight   INT NOT NULL CHECK (weight >= 1), "
+          + "    height   INT NOT NULL CHECK (height >= 1), "
+          + "    birthDay DATE CHECK (birthDay < CURRENT_DATE)"
           + "); ";
       Statement statement = connection.createStatement();
       statement.execute(createSchemaSql);
@@ -37,10 +35,13 @@ public class JdbcDogDao {
   public DogDto create(DogDto dog) throws SQLException {
     try (Connection connection = dataSource.getConnection()) {
       Statement statement = connection.createStatement();
-      statement.executeUpdate(String.format(
+      String insert = String.format(
           "insert into %s (name, weight, height, birthDay) values ('%s', '%s', '%s', '%s');",
-          TABLE_NAME, dog.getName(), dog.getWeight(), dog.getHeight(), dog.getBirthDay()),
+          TABLE_NAME, dog.getName(), dog.getWeight(), dog.getHeight(), dog.getBirthDay());
+      insert = insert.replaceAll("'null'", "null");
+      statement.executeUpdate(insert,
           Statement.RETURN_GENERATED_KEYS);
+
       ResultSet rs = statement.getGeneratedKeys();
       if (rs.next()) {
         return get(rs.getInt(1));
@@ -56,10 +57,12 @@ public class JdbcDogDao {
   public DogDto update(DogDto dog) throws SQLException {
     try (Connection connection = dataSource.getConnection()) {
       Statement statement = connection.createStatement();
-      int count = statement.executeUpdate(String.format(
+      String update = String.format(
           "update %s set name='%s', weight='%s', height='%s', birthDay='%s' where id=%s;",
           TABLE_NAME, dog.getName(), dog.getWeight(), dog.getHeight(), dog.getBirthDay(),
-          dog.getId()));
+          dog.getId());
+      update = update.replaceAll("'null'", "null");
+      int count = statement.executeUpdate(update);
       if (count == 0) {
         throw new ResourceNotFoundException();
       }

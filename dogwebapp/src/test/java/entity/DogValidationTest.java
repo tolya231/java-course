@@ -1,4 +1,4 @@
-package unit;
+package entity;
 
 
 import static org.testng.Assert.assertFalse;
@@ -14,7 +14,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import utils.DogGenerator;
 
-public class DogUnitTest {
+public class DogValidationTest {
 
   private Validator validator;
 
