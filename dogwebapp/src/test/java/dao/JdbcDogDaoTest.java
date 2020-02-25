@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import org.testng.util.Strings;
 import utils.DogGenerator;
@@ -42,6 +43,13 @@ public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
   public void when_nullName_then_exception() throws SQLException {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(null));
+  }
+
+  @Test
+  @Ignore //until sql injection fixed
+  public void when_sqlInjectionName_then_no_exception() throws SQLException {
+    DogDto dog = DogGenerator.dog();
+    dogDao.create(dog.setName("\"' blah"));
   }
 
   @Test(expectedExceptions = {SQLException.class})
