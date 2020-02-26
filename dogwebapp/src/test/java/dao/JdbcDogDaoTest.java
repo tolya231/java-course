@@ -46,7 +46,6 @@ public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
   }
 
   @Test
-  @Ignore //until sql injection fixed
   public void when_sqlInjectionName_then_no_exception() throws SQLException {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName("\"' blah"));
