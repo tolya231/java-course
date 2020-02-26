@@ -3,8 +3,8 @@ package com.epam.repositories.jdbcDao;
 import com.epam.dto.DogDto;
 import com.epam.exceptions.ResourceNotFoundException;
 
-import java.sql.*;
 import javax.sql.DataSource;
+import java.sql.*;
 
 public class JdbcDogDao {
 
