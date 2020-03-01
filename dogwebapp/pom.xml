@@ -89,12 +89,26 @@
     </dependency>
 
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jdbc</artifactId>
-      <version>${sping.version}</version>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>5.0.3</version>
     </dependency>
-
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>6.2.4</version>
+        <configuration>
+          <url>jdbc:h2:mem:prod</url>
+          <user>admin</user>
+          <password>admin</password>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 
 </project>

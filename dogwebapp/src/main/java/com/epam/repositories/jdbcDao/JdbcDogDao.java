@@ -10,25 +10,11 @@ public class JdbcDogDao {
 
   private final DataSource dataSource;
 
-  public JdbcDogDao(DataSource dataSource) throws SQLException {
+  public JdbcDogDao(DataSource dataSource) {
     this.dataSource = dataSource;
-    try (Connection connection = dataSource.getConnection()) {
-      String createSchemaSql = "CREATE TABLE IF NOT EXISTS DOG "
-          + "("
-          + "    id IDENTITY NOT NULL PRIMARY KEY, "
-          + "    name     VARCHAR(100) NOT NULL CHECK (length(name) >= 1), "
-          + "    weight   INT NOT NULL CHECK (weight >= 1), "
-          + "    height   INT NOT NULL CHECK (height >= 1), "
-          + "    birthDay DATE CHECK (birthDay < CURRENT_DATE)"
-          + "); ";
-      Statement statement = connection.createStatement();
-      statement.execute(createSchemaSql);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
   }
 
-  public DogDto create(DogDto dog) throws SQLException {
+  public DogDto create(DogDto dog) {
     try (Connection connection = dataSource.getConnection()) {
       String insert = "INSERT INTO DOG (name, weight, height, birthDay) VALUES (?, ?, ?, ?);";
       PreparedStatement preparedStatement = connection
@@ -50,7 +36,7 @@ public class JdbcDogDao {
     }
   }
 
-  public DogDto update(DogDto dog) throws SQLException {
+  public DogDto update(DogDto dog) {
     try (Connection connection = dataSource.getConnection()) {
       String update = "UPDATE DOG SET name=?, weight=?, height=?, birthDay=? WHERE id=?;";
       PreparedStatement preparedStatement = connection.prepareStatement(update);
@@ -70,7 +56,7 @@ public class JdbcDogDao {
     }
   }
 
-  public DogDto get(long id) throws SQLException {
+  public DogDto get(long id) {
     try (Connection connection = dataSource.getConnection()) {
       String select = "SELECT * FROM DOG WHERE id=?;";
       PreparedStatement preparedStatement = connection.prepareStatement(select);
@@ -91,7 +77,7 @@ public class JdbcDogDao {
     }
   }
 
-  public void delete(long id) throws SQLException {
+  public void delete(long id) {
     try (Connection connection = dataSource.getConnection()) {
       String delete = "DELETE FROM DOG WHERE id=?;";
       PreparedStatement preparedStatement = connection.prepareStatement(delete);
