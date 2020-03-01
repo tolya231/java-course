@@ -24,7 +24,7 @@ public class DogValidationTest {
   }
 
   @Test
-  public void validateInvalidNames_empty_or_null() {
+  public void when_invalidNames_empty_or_null_then_validationFailed() {
     Set<ConstraintViolation<DogDto>> violations = validator.validate(DogGenerator.dog());
     assertTrue(violations.isEmpty());
 
@@ -36,7 +36,7 @@ public class DogValidationTest {
   }
 
   @Test
-  public void validateInvalidHeight_0_or_null() {
+  public void when_invalidHeight_0_or_null_then__validationFailed() {
     Set<ConstraintViolation<DogDto>> violations = validator.validate(DogGenerator.dog());
     assertTrue(violations.isEmpty());
 
@@ -48,7 +48,7 @@ public class DogValidationTest {
   }
 
   @Test
-  public void validateInvalidWeight_0_or_null() {
+  public void when_invalidWeight_0_or_null_then__validationFailed() {
     Set<ConstraintViolation<DogDto>> violations = validator.validate(DogGenerator.dog());
     assertTrue(violations.isEmpty());
 
@@ -60,7 +60,7 @@ public class DogValidationTest {
   }
 
   @Test
-  public void validateInvalidBirthday_notPast() {
+  public void when_invalidBirthday_notPast_then_validationFailed() {
     Set<ConstraintViolation<DogDto>> violations = validator.validate(DogGenerator.dog());
     assertTrue(violations.isEmpty());
 

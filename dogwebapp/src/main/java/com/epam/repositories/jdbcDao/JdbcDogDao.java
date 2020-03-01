@@ -24,15 +24,15 @@ public class JdbcDogDao {
       Statement statement = connection.createStatement();
       statement.execute(createSchemaSql);
     } catch (SQLException e) {
-      e.printStackTrace();
-      throw new SQLException("Database creation failed");
+      throw new RuntimeException(e);
     }
   }
 
   public DogDto create(DogDto dog) throws SQLException {
     try (Connection connection = dataSource.getConnection()) {
-      String insert = "insert into DOG (name, weight, height, birthDay) values (?, ?, ?, ?);";
-      PreparedStatement preparedStatement = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+      String insert = "INSERT INTO DOG (name, weight, height, birthDay) VALUES (?, ?, ?, ?);";
+      PreparedStatement preparedStatement = connection
+          .prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
       preparedStatement.setString(1, dog.getName());
       preparedStatement.setObject(2, dog.getWeight(), Types.INTEGER);
       preparedStatement.setObject(3, dog.getHeight(), Types.INTEGER);
@@ -43,17 +43,16 @@ public class JdbcDogDao {
       if (rs.next()) {
         return get(rs.getInt(1));
       } else {
-        throw new SQLException();
+        throw new RuntimeException("Dof creation failed");
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      throw new SQLException("Dog creation failed");
+      throw new RuntimeException(e);
     }
   }
 
   public DogDto update(DogDto dog) throws SQLException {
     try (Connection connection = dataSource.getConnection()) {
-      String update = "update DOG set name=?, weight=?, height=?, birthDay=? where id=?;";
+      String update = "UPDATE DOG SET name=?, weight=?, height=?, birthDay=? WHERE id=?;";
       PreparedStatement preparedStatement = connection.prepareStatement(update);
       preparedStatement.setString(1, dog.getName());
       preparedStatement.setObject(2, dog.getWeight(), Types.INTEGER);
@@ -67,14 +66,13 @@ public class JdbcDogDao {
       }
       return get(dog.getId());
     } catch (SQLException e) {
-      e.printStackTrace();
-      throw new SQLException("Dog update failed");
+      throw new RuntimeException(e);
     }
   }
 
   public DogDto get(long id) throws SQLException {
     try (Connection connection = dataSource.getConnection()) {
-      String select = "select * from DOG where id=?;";
+      String select = "SELECT * FROM DOG WHERE id=?;";
       PreparedStatement preparedStatement = connection.prepareStatement(select);
       preparedStatement.setLong(1, id);
 
@@ -89,14 +87,13 @@ public class JdbcDogDao {
         throw new ResourceNotFoundException();
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      throw new SQLException("Dog get failed");
+      throw new RuntimeException(e);
     }
   }
 
   public void delete(long id) throws SQLException {
     try (Connection connection = dataSource.getConnection()) {
-      String delete = "delete from DOG where id=?;";
+      String delete = "DELETE FROM DOG WHERE id=?;";
       PreparedStatement preparedStatement = connection.prepareStatement(delete);
       preparedStatement.setLong(1, id);
       int count = preparedStatement.executeUpdate();
@@ -104,7 +101,7 @@ public class JdbcDogDao {
         throw new ResourceNotFoundException();
       }
     } catch (SQLException e) {
-      throw new SQLException("Dog get failed");
+      throw new RuntimeException(e);
     }
   }
 }

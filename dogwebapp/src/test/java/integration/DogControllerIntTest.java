@@ -9,6 +9,7 @@ import io.restassured.mapper.ObjectMapperType;
 import java.time.LocalDate;
 import java.util.Collections;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.DogGenerator;
 
@@ -32,7 +33,7 @@ public class DogControllerIntTest {
         .when().get().thenReturn()
         .as(DogDto.class, ObjectMapperType.JACKSON_2);
 
-    EqualsBuilder.reflectionEquals(dog, createdDog, Collections.singletonList("id"));
+    Assert.assertTrue(EqualsBuilder.reflectionEquals(dog, createdDog, Collections.singletonList("id")));
   }
 
   @Test
@@ -51,7 +52,7 @@ public class DogControllerIntTest {
         .when().post().thenReturn()
         .as(DogDto.class, ObjectMapperType.JACKSON_2);
 
-    EqualsBuilder.reflectionEquals(dog, createdDog, Collections.singletonList("id"));
+    Assert.assertTrue(EqualsBuilder.reflectionEquals(dog, createdDog, Collections.singletonList("id")));
     assertNotNull(createdDog.getId());
   }
 
@@ -72,7 +73,7 @@ public class DogControllerIntTest {
         .body(dog)
         .when().put().thenReturn()
         .as(DogDto.class, ObjectMapperType.JACKSON_2);
-    EqualsBuilder.reflectionEquals(dog, updatedDog, Collections.singletonList("id"));
+    Assert.assertTrue(EqualsBuilder.reflectionEquals(dog, updatedDog, Collections.singletonList("id")));
 
   }
 

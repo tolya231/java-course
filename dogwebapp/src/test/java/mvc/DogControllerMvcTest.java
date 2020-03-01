@@ -17,12 +17,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import utils.DogGenerator;
 
 @WebAppConfiguration
-@ContextConfiguration(locations = {"file:**/app-config.xml", "file:**/web-config.xml"})
+@ContextConfiguration(locations = {"classpath:/app-config.xml", "classpath:/web-config.xml"})
 public class DogControllerMvcTest extends AbstractTestNGSpringContextTests {
 
   @Autowired
@@ -58,8 +59,8 @@ public class DogControllerMvcTest extends AbstractTestNGSpringContextTests {
         .andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString();
-    EqualsBuilder.reflectionEquals(dog, objectMapper.readValue(response, DogDto.class),
-        Collections.singletonList("id"));
+    Assert.assertTrue(EqualsBuilder.reflectionEquals(dog, objectMapper.readValue(response, DogDto.class),
+        Collections.singletonList("id")));
 
   }
 
@@ -69,13 +70,6 @@ public class DogControllerMvcTest extends AbstractTestNGSpringContextTests {
         .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         .andExpect(status().isNotFound());
-  }
-
-  @Test
-  public void when_createValidDog_then_createdSuccessfully() throws Exception {
-    DogDto dog = createDog();
-    EqualsBuilder.reflectionEquals(DogGenerator.dog(), dog, Collections.singletonList("id"));
-
   }
 
   @Test
@@ -98,8 +92,8 @@ public class DogControllerMvcTest extends AbstractTestNGSpringContextTests {
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString();
 
-    EqualsBuilder.reflectionEquals(dog, objectMapper.readValue(updated, DogDto.class),
-        Collections.singletonList("id"));
+    Assert.assertTrue(EqualsBuilder.reflectionEquals(dog, objectMapper.readValue(updated, DogDto.class),
+        Collections.singletonList("id")));
   }
 
   @Test
