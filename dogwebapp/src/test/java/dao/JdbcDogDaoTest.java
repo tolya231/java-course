@@ -3,7 +3,6 @@ package dao;
 
 import com.epam.dto.DogDto;
 import com.epam.repositories.jdbcDao.JdbcDogDao;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,60 +20,60 @@ public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
   JdbcDogDao dogDao;
 
   @Test
-  public void when_validDog_then_noExceptions() throws SQLException {
+  public void when_validDog_then_noExceptions() {
     dogDao.create(DogGenerator.dog());
   }
 
   @Test(expectedExceptions = {RuntimeException.class})
-  public void when_emptyName_then_exception() throws SQLException {
+  public void when_emptyName_then_exception() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(""));
   }
 
   @Test(expectedExceptions = {RuntimeException.class})
-  public void when_tooLongName_then_exception() throws SQLException {
+  public void when_tooLongName_then_exception() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(Strings.repeat("D", 101)));
   }
 
   @Test(expectedExceptions = {RuntimeException.class})
-  public void when_nullName_then_exception() throws SQLException {
+  public void when_nullName_then_exception() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(null));
   }
 
   @Test
-  public void when_sqlInjectionName_then_no_exception() throws SQLException {
+  public void when_sqlInjectionName_then_no_exception() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName("\"' blah"));
   }
 
   @Test(expectedExceptions = {RuntimeException.class})
-  public void when_weight_0_then_exception() throws SQLException {
+  public void when_weight_0_then_exception() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setWeight(0));
   }
 
   @Test(expectedExceptions = {RuntimeException.class})
-  public void when_weight_null_then_exception() throws SQLException {
+  public void when_weight_null_then_exception() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setWeight(null));
   }
 
   @Test(expectedExceptions = {RuntimeException.class})
-  public void when_height_0_then_exception() throws SQLException {
+  public void when_height_0_then_exception() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setHeight(0));
   }
 
   @Test(expectedExceptions = {RuntimeException.class})
-  public void when_height_null_then_exception() throws SQLException {
+  public void when_height_null_then_exception() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setHeight(null));
   }
 
   @Test(expectedExceptions = {RuntimeException.class})
-  public void when_birthday_notPast_then_exception() throws SQLException {
+  public void when_birthday_notPast_then_exception() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setBirthDay(LocalDate.now().plusDays(1)));
   }
