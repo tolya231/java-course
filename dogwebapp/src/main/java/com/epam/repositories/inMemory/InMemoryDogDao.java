@@ -2,6 +2,7 @@ package com.epam.repositories.inMemory;
 
 import com.epam.dto.DogDto;
 import com.epam.exceptions.ResourceNotFoundException;
+import com.epam.repositories.DogDao;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class InMemoryDogDao {
+public class InMemoryDogDao implements DogDao {
 
   private Map<Long, DogDto> dogs;
   private static AtomicLong uniqueLongId = new AtomicLong(3);
@@ -41,12 +42,14 @@ public class InMemoryDogDao {
   static {
   }
 
+  @Override
   public DogDto create(DogDto dog) {
     dog.setId(uniqueLongId.incrementAndGet());
     dogs.put(dog.getId(), dog);
     return dog;
   }
 
+  @Override
   public DogDto update(DogDto dog) {
     DogDto foundDog = dogs.get(dog.getId());
     if (foundDog != null) {
@@ -56,6 +59,7 @@ public class InMemoryDogDao {
     throw new ResourceNotFoundException();
   }
 
+  @Override
   public DogDto get(long id) {
     DogDto dog = dogs.get(id);
     if (dog == null) {
@@ -65,6 +69,7 @@ public class InMemoryDogDao {
     }
   }
 
+  @Override
   public void delete(long id) {
     DogDto dog = dogs.remove(id);
     if (dog == null) {

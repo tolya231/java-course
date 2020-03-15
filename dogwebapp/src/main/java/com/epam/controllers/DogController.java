@@ -1,8 +1,7 @@
 package com.epam.controllers;
 
 import com.epam.dto.DogDto;
-import com.epam.repositories.jdbcDao.JdbcDogDao;
-import java.sql.SQLException;
+import com.epam.services.DogService;
 import javax.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,29 +16,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/dog")
 public class DogController {
 
-  private final JdbcDogDao dogDao;
+  private final DogService dogService;
 
-  public DogController(JdbcDogDao dogDao) {
-    this.dogDao = dogDao;
+  public DogController(DogService dogService) {
+    this.dogService = dogService;
   }
 
   @GetMapping(value = "/{id}")
-  public DogDto getDog(@PathVariable long id) throws SQLException {
-    return dogDao.get(id);
+  public DogDto getDog(@PathVariable long id) {
+    return dogService.get(id);
   }
 
   @PostMapping
-  public DogDto createDog(@RequestBody @Valid DogDto dog) throws SQLException {
-    return dogDao.create(dog);
+  public DogDto createDog(@RequestBody @Valid DogDto dog) {
+    return dogService.create(dog);
   }
 
   @PutMapping(value = "/{id}")
-  public DogDto putDog(@PathVariable long id, @RequestBody @Valid DogDto dog) throws SQLException {
-    return dogDao.update(dog.setId(id));
+  public DogDto putDog(@PathVariable long id, @RequestBody @Valid DogDto dog) {
+    return dogService.update(dog.setId(id));
   }
 
   @DeleteMapping(value = "/{id}")
-  public void deleteDog(@PathVariable long id) throws SQLException {
-    dogDao.delete(id);
+  public void deleteDog(@PathVariable long id) {
+    dogService.delete(id);
   }
 }

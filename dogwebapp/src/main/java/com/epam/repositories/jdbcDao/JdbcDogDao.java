@@ -3,11 +3,12 @@ package com.epam.repositories.jdbcDao;
 import com.epam.dto.DogDto;
 import com.epam.exceptions.ResourceNotFoundException;
 
+import com.epam.repositories.DogDao;
 import javax.sql.DataSource;
 import java.sql.*;
 import lombok.SneakyThrows;
 
-public class JdbcDogDao {
+public class JdbcDogDao implements DogDao {
 
   private final DataSource dataSource;
 
@@ -16,6 +17,7 @@ public class JdbcDogDao {
   }
 
   @SneakyThrows
+  @Override
   public DogDto create(DogDto dog) {
     Connection connection = null;
     try {
@@ -51,6 +53,7 @@ public class JdbcDogDao {
   }
 
   @SneakyThrows
+  @Override
   public DogDto update(DogDto dog) {
     Connection connection = null;
     try {
@@ -84,6 +87,7 @@ public class JdbcDogDao {
   }
 
   @SneakyThrows
+  @Override
   public DogDto get(long id) {
     Connection connection = null;
     try {
@@ -119,6 +123,7 @@ public class JdbcDogDao {
   }
 
   @SneakyThrows
+  @Override
   public void delete(long id) {
     Connection connection = null;
     try {

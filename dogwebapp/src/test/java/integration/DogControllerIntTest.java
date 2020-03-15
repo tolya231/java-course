@@ -25,6 +25,11 @@ public class DogControllerIntTest {
         .as(DogDto.class, ObjectMapperType.JACKSON_2);
   }
 
+  public void removeCreatedDogFromDB(long id) {
+    given().baseUri(url + "/" + id)
+        .when().delete();
+  }
+
   @Test
   public void when_getDogWithExistingId_then_DogReturned() {
     DogDto createdDog = createDog();
@@ -34,6 +39,8 @@ public class DogControllerIntTest {
         .as(DogDto.class, ObjectMapperType.JACKSON_2);
 
     Assert.assertTrue(EqualsBuilder.reflectionEquals(dog, createdDog, Collections.singletonList("id")));
+
+    removeCreatedDogFromDB(createdDog.getId());
   }
 
   @Test
@@ -54,6 +61,8 @@ public class DogControllerIntTest {
 
     Assert.assertTrue(EqualsBuilder.reflectionEquals(dog, createdDog, Collections.singletonList("id")));
     assertNotNull(createdDog.getId());
+
+    removeCreatedDogFromDB(createdDog.getId());
   }
 
   @Test
@@ -66,26 +75,29 @@ public class DogControllerIntTest {
 
   @Test
   public void when_updateDogSetWeight1_then_updated() {
-    DogDto dog = createDog().setWeight(1);
+    DogDto createdDog = createDog().setWeight(1);
 
-    DogDto updatedDog = given().baseUri(url + "/" + dog.getId())
+    DogDto updatedDog = given().baseUri(url + "/" + createdDog.getId())
         .contentType(ContentType.JSON)
-        .body(dog)
+        .body(createdDog)
         .when().put().thenReturn()
         .as(DogDto.class, ObjectMapperType.JACKSON_2);
-    Assert.assertTrue(EqualsBuilder.reflectionEquals(dog, updatedDog, Collections.singletonList("id")));
+    Assert.assertTrue(EqualsBuilder.reflectionEquals(createdDog, updatedDog, Collections.singletonList("id")));
 
+    removeCreatedDogFromDB(updatedDog.getId());
   }
 
   @Test
   public void when_updateDogSetNotValidDate_then_statusCode400() {
-    DogDto dog = createDog().setBirthDay(LocalDate.now());
+    DogDto createdDog = createDog().setBirthDay(LocalDate.now());
 
-    given().baseUri(url + "/" + dog.getId())
+    given().baseUri(url + "/" + createdDog.getId())
         .contentType(ContentType.JSON)
-        .body(dog)
+        .body(createdDog)
         .when().put().then()
         .statusCode(400);
+
+    removeCreatedDogFromDB(createdDog.getId());
   }
 
   @Test
