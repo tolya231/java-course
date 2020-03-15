@@ -18,6 +18,10 @@
     <constructor-arg ref="jdbcConnectionHolder"/>
   </bean>
 
+  <bean id="transactionalDogService" class="com.epam.services.TransactionalDogService">
+    <constructor-arg ref="dogService"/>
+  </bean>
+
   <bean id="h2dataSource" class="org.h2.jdbcx.JdbcDataSource" depends-on="h2Server">
     <property name="URL" value="jdbc:h2:mem:prod;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE"/>
     <property name="user" value="admin"/>

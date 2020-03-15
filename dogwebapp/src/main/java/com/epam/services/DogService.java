@@ -8,7 +8,7 @@ import com.epam.jdbc.JdbcConnectionHolder;
 import com.epam.repositories.DogDao;
 import java.sql.Connection;
 
-public class DogService {
+public class DogService implements CommonCrudService {
 
   private final DogDao dogDao;
   private final JdbcConnectionHolder jdbcConnectionHolder;
