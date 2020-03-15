@@ -15,6 +15,7 @@
 
   <bean id="dogService" class="com.epam.services.DogService">
     <constructor-arg ref="jdbcDogDao"/>
+    <constructor-arg ref="jdbcConnectionHolder"/>
   </bean>
 
   <bean id="h2dataSource" class="org.h2.jdbcx.JdbcDataSource" depends-on="h2Server">
