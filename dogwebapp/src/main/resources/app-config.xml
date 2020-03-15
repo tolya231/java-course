@@ -5,8 +5,12 @@
 
   <bean id="inMemoryDogDao" class="com.epam.repositories.inMemory.InMemoryDogDao"/>
 
-  <bean id="jdbcDogDao" class="com.epam.repositories.jdbcDao.JdbcDogDao" depends-on="flyway">
+  <bean id="jdbcConnectionHolder" class="com.epam.jdbc.JdbcConnectionHolder" depends-on="flyway">
     <constructor-arg ref="h2dataSource"/>
+  </bean>
+
+  <bean id="jdbcDogDao" class="com.epam.repositories.jdbcDao.JdbcDogDao">
+    <constructor-arg ref="jdbcConnectionHolder"/>
   </bean>
 
   <bean id="dogService" class="com.epam.services.DogService">

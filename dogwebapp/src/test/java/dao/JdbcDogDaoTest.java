@@ -2,9 +2,10 @@ package dao;
 
 
 import com.epam.dto.DogDto;
-import com.epam.repositories.jdbcDao.JdbcDogDao;
+import com.epam.repositories.DogDao;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -17,7 +18,8 @@ import utils.DogGenerator;
 public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
 
   @Autowired
-  JdbcDogDao dogDao;
+  @Qualifier("jdbcDogDao")
+  DogDao dogDao;
 
   @Test
   public void when_validDog_then_noExceptions() {
