@@ -35,14 +35,14 @@ public class JdbcConnectionHolder {
   }
 
   @SneakyThrows
-  public void closeConnection() {
+  public void rollbackTransaction() {
     Connection connection = threadLocal.get();
-      connection.close();
+      connection.rollback();
   }
 
   @SneakyThrows
-  public void rollbackConnection() {
+  public void closeConnection() {
     Connection connection = threadLocal.get();
-      connection.rollback();
+    connection.close();
   }
 }

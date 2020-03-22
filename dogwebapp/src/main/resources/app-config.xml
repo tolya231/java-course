@@ -17,9 +17,10 @@
     <constructor-arg ref="jdbcDogDao"/>
   </bean>
 
-  <bean id="transactionalDogService" class="com.epam.services.TransactionalDogService">
-    <constructor-arg ref="dogService"/>
+  <bean id="transactionalDogService" class="com.epam.services.TransactionalProxy" factory-method="createProxy">
     <constructor-arg ref="jdbcConnectionHolder"/>
+    <constructor-arg ref="dogService"/>
+    <constructor-arg value="com.epam.services.DogCrudService"/>
   </bean>
 
   <bean id="h2dataSource" class="org.h2.jdbcx.JdbcDataSource" depends-on="h2Server">
