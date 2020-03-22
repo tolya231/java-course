@@ -1,4 +1,4 @@
-package com.epam.services;
+package com.epam.services.transactions;
 
 import com.epam.jdbc.JdbcConnectionHolder;
 import java.lang.reflect.InvocationHandler;

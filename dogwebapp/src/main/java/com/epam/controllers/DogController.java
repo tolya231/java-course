@@ -1,7 +1,7 @@
 package com.epam.controllers;
 
 import com.epam.dto.DogDto;
-import com.epam.services.DogCrudService;
+import com.epam.services.DogService;
 import javax.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/dog")
 public class DogController {
 
-  private final DogCrudService dogService;
+  private final DogService dogService;
 
-  public DogController(DogCrudService dogService) {
+  public DogController(DogService dogService) {
     this.dogService = dogService;
   }
 
