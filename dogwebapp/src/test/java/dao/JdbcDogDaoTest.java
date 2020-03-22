@@ -30,7 +30,7 @@ public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
 
   @BeforeClass
   public void setUp() {
-    jdbcConnectionHolder.createConnection();
+    jdbcConnectionHolder.createOrGetConnection();
   }
 
   @Test

@@ -23,7 +23,7 @@ public class JdbcDogDao implements DogDao {
   @Override
   @SneakyThrows
   public DogDto create(DogDto dog) {
-    Connection connection = jdbcConnectionHolder.getConnection();
+    Connection connection = jdbcConnectionHolder.createOrGetConnection();
 
     String insert = "INSERT INTO DOG (name, weight, height, birthDay) VALUES (?, ?, ?, ?);";
     PreparedStatement preparedStatement = connection
@@ -46,7 +46,7 @@ public class JdbcDogDao implements DogDao {
   @Override
   @SneakyThrows
   public DogDto update(DogDto dog) {
-    Connection connection = jdbcConnectionHolder.getConnection();
+    Connection connection = jdbcConnectionHolder.createOrGetConnection();
 
     String update = "UPDATE DOG SET name=?, weight=?, height=?, birthDay=? WHERE id=?;";
     PreparedStatement preparedStatement = connection.prepareStatement(update);
@@ -67,7 +67,7 @@ public class JdbcDogDao implements DogDao {
   @Override
   @SneakyThrows
   public DogDto get(long id) {
-    Connection connection = jdbcConnectionHolder.getConnection();
+    Connection connection = jdbcConnectionHolder.createOrGetConnection();
 
     String select = "SELECT * FROM DOG WHERE id=?;";
     PreparedStatement preparedStatement = connection.prepareStatement(select);
@@ -90,7 +90,7 @@ public class JdbcDogDao implements DogDao {
   @Override
   @SneakyThrows
   public void delete(long id) {
-    Connection connection = jdbcConnectionHolder.getConnection();
+    Connection connection = jdbcConnectionHolder.createOrGetConnection();
 
     String delete = "DELETE FROM DOG WHERE id=?;";
     PreparedStatement preparedStatement = connection.prepareStatement(delete);

@@ -13,28 +13,36 @@ public class JdbcConnectionHolder {
     this.dataSource = dataSource;
   }
 
-  public Connection getConnection() {
+  @SneakyThrows
+  public Connection createOrGetConnection() {
+    Connection connection = threadLocal.get();
+    if (connection == null || connection.isClosed()) {
+      threadLocal.set(dataSource.getConnection());
+    }
     return threadLocal.get();
   }
 
   @SneakyThrows
-  public Connection createConnection() {
-    Connection connection = dataSource.getConnection();
-    threadLocal.set(connection);
-    return connection;
+  public void startTransaction() {
+    Connection connection = threadLocal.get();
+    connection.setAutoCommit(false);
   }
 
   @SneakyThrows
-  public static void closeConnection(Connection connection) {
-    if (connection != null) {
+  public void commitTransaction() {
+    Connection connection = threadLocal.get();
+    connection.commit();
+  }
+
+  @SneakyThrows
+  public void closeConnection() {
+    Connection connection = threadLocal.get();
       connection.close();
-    }
   }
 
   @SneakyThrows
-  public static void rollbackConnection(Connection connection) {
-    if (connection != null) {
+  public void rollbackConnection() {
+    Connection connection = threadLocal.get();
       connection.rollback();
-    }
   }
 }

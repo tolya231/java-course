@@ -1,18 +1,14 @@
 package com.epam.services;
 
-import static com.epam.jdbc.JdbcConnectionHolder.closeConnection;
-import static com.epam.jdbc.JdbcConnectionHolder.rollbackConnection;
-
 import com.epam.dto.DogDto;
 import com.epam.jdbc.JdbcConnectionHolder;
-import java.sql.Connection;
 
-public class TransactionalDogService implements CommonCrudService {
+public class TransactionalDogService implements DogCrudService {
 
-  private final CommonCrudService dogService;
+  private final DogCrudService dogService;
   private final JdbcConnectionHolder jdbcConnectionHolder;
 
-  public TransactionalDogService(CommonCrudService dogService,
+  public TransactionalDogService(DogCrudService dogService,
       JdbcConnectionHolder jdbcConnectionHolder) {
     this.dogService = dogService;
     this.jdbcConnectionHolder = jdbcConnectionHolder;
@@ -20,65 +16,64 @@ public class TransactionalDogService implements CommonCrudService {
 
   @Override
   public DogDto create(DogDto dog) {
-    Connection connection = null;
     try {
-      connection = jdbcConnectionHolder.createConnection();
-      connection.setAutoCommit(false);
-
-      return dogService.create(dog);
+      jdbcConnectionHolder.createOrGetConnection();
+      jdbcConnectionHolder.startTransaction();
+      DogDto dogDto = dogService.create(dog);
+      jdbcConnectionHolder.commitTransaction();
+      return dogDto;
     } catch (Exception e) {
-      rollbackConnection(connection);
+      jdbcConnectionHolder.rollbackConnection();
       throw new RuntimeException(String.format("Create dog %s failed", dog), e);
     } finally {
-      closeConnection(connection);
+      jdbcConnectionHolder.closeConnection();
     }
   }
 
   @Override
   public DogDto update(DogDto dog) {
-    Connection connection = null;
     try {
-      connection = jdbcConnectionHolder.createConnection();
-      connection.setAutoCommit(false);
-
-      return dogService.update(dog);
+      jdbcConnectionHolder.createOrGetConnection();
+      jdbcConnectionHolder.startTransaction();
+      DogDto dogDto = dogService.update(dog);
+      jdbcConnectionHolder.commitTransaction();
+      return dogDto;
     } catch (Exception e) {
-      rollbackConnection(connection);
+      jdbcConnectionHolder.rollbackConnection();
       throw new RuntimeException(String.format("Update dog %s failed", dog), e);
     } finally {
-      closeConnection(connection);
+      jdbcConnectionHolder.closeConnection();
     }
   }
 
   @Override
   public DogDto get(long id) {
-    Connection connection = null;
     try {
-      connection = jdbcConnectionHolder.createConnection();
-      connection.setAutoCommit(false);
-
-      return dogService.get(id);
+      jdbcConnectionHolder.createOrGetConnection();
+      jdbcConnectionHolder.startTransaction();
+      DogDto dogDto = dogService.get(id);
+      jdbcConnectionHolder.commitTransaction();
+      return dogDto;
     } catch (Exception e) {
-      rollbackConnection(connection);
+      jdbcConnectionHolder.rollbackConnection();
       throw new RuntimeException(String.format("Get dog with id=%s failed", id), e);
     } finally {
-      closeConnection(connection);
+      jdbcConnectionHolder.closeConnection();
     }
   }
 
   @Override
   public void delete(long id) {
-    Connection connection = null;
     try {
-      connection = jdbcConnectionHolder.createConnection();
-      connection.setAutoCommit(false);
-
+      jdbcConnectionHolder.createOrGetConnection();
+      jdbcConnectionHolder.startTransaction();
       dogService.delete(id);
+      jdbcConnectionHolder.commitTransaction();
     } catch (Exception e) {
-      rollbackConnection(connection);
+      jdbcConnectionHolder.rollbackConnection();
       throw new RuntimeException(String.format("Delete dog with id=%s failed", id), e);
     } finally {
-      closeConnection(connection);
+      jdbcConnectionHolder.closeConnection();
     }
   }
 

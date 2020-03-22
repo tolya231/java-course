@@ -2,7 +2,7 @@ package com.epam.services;
 
 import com.epam.dto.DogDto;
 
-public interface CommonCrudService {
+public interface DogCrudService {
 
   DogDto create(DogDto dog);
 
