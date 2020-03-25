@@ -3,7 +3,7 @@ package com.epam.services;
 import com.epam.dto.DogDto;
 import com.epam.repositories.DogDao;
 
-public class DogService {
+public class DogService implements DogCrudService {
 
   private DogDao dogDao;
 
