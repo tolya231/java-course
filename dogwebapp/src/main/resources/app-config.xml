@@ -1,7 +1,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:aop="http://www.springframework.org/schema/aop"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+                           http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
   <bean id="inMemoryDogDao" class="com.epam.repositories.inMemory.InMemoryDogDao"/>
 
@@ -10,6 +11,15 @@
   </bean>
 
   <bean id="jdbcDogDao" class="com.epam.repositories.jdbcDao.JdbcDogDao">
+    <constructor-arg ref="jdbcConnectionHolder"/>
+  </bean>
+
+  <bean id="dogService" class="com.epam.services.DogService">
+    <constructor-arg ref="jdbcDogDao"/>
+  </bean>
+
+  <aop:aspectj-autoproxy/>
+  <bean id="myAspect" class="com.epam.aop.aspects.TransactionalAspect">
     <constructor-arg ref="jdbcConnectionHolder"/>
   </bean>
 

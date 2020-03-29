@@ -11,7 +11,6 @@ import org.aspectj.lang.annotation.Pointcut;
 @Aspect
 public class LogAspect {
 
-//  @Pointcut("execution(@com.epam.aop.LogMe * *(..))")
   @Pointcut("@annotation(com.epam.aop.LogMe)")
   public void callAtLogMeAnnotation() {
   }
