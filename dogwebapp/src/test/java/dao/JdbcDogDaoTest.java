@@ -6,10 +6,9 @@ import com.epam.jdbc.JdbcDataSourceUtils;
 import com.epam.repositories.DogDao;
 import java.time.LocalDate;
 import javax.sql.DataSource;
-import org.h2.jdbc.JdbcSQLDataException;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -39,19 +38,19 @@ public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
     dogDao.create(DogGenerator.dog());
   }
 
-  @Test(expectedExceptions = {JdbcSQLIntegrityConstraintViolationException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void when_emptyName_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(""));
   }
 
-  @Test(expectedExceptions = {JdbcSQLDataException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void when_tooLongName_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(Strings.repeat("D", 101)));
   }
 
-  @Test(expectedExceptions = {JdbcSQLIntegrityConstraintViolationException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void when_nullName_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(null));
@@ -63,31 +62,31 @@ public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
     dogDao.create(dog.setName("\"' blah"));
   }
 
-  @Test(expectedExceptions = {JdbcSQLIntegrityConstraintViolationException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void when_weight_0_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setWeight(0));
   }
 
-  @Test(expectedExceptions = {JdbcSQLIntegrityConstraintViolationException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void when_weight_null_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setWeight(null));
   }
 
-  @Test(expectedExceptions = {JdbcSQLIntegrityConstraintViolationException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void when_height_0_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setHeight(0));
   }
 
-  @Test(expectedExceptions = {JdbcSQLIntegrityConstraintViolationException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void when_height_null_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setHeight(null));
   }
 
-  @Test(expectedExceptions = {JdbcSQLIntegrityConstraintViolationException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void when_birthday_notPast_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setBirthDay(LocalDate.now().plusDays(1)));

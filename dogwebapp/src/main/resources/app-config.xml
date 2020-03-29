@@ -15,21 +15,21 @@
   </bean>
 
 
-  <aop:aspectj-autoproxy/>
-  <bean id="transactionalAspect" class="com.epam.aop.aspects.TransactionalAspect">
-    <constructor-arg ref="h2dataSource"/>
-  </bean>
+<!--  <aop:aspectj-autoproxy/>-->
+<!--  <bean id="transactionalAspect" class="com.epam.aop.aspects.TransactionalAspect">-->
+<!--    <constructor-arg ref="h2dataSource"/>-->
+<!--  </bean>-->
 
-  <bean id="dynamicDogServiceProxy" class="com.epam.services.transactions.TransactionalProxy"
-    factory-method="createProxy">
-    <constructor-arg ref="h2dataSource"/>
-    <constructor-arg>
-      <bean class="com.epam.services.DogService">
-        <constructor-arg ref="jdbcDogDao"/>
-      </bean>
-    </constructor-arg>
-    <constructor-arg value="com.epam.services.DogCrudService"/>
-  </bean>
+<!--  <bean id="dynamicDogServiceProxy" class="com.epam.services.transactions.TransactionalProxy"-->
+<!--    factory-method="createProxy">-->
+<!--    <constructor-arg ref="h2dataSource"/>-->
+<!--    <constructor-arg>-->
+<!--      <bean class="com.epam.services.DogService">-->
+<!--        <constructor-arg ref="jdbcDogDao"/>-->
+<!--      </bean>-->
+<!--    </constructor-arg>-->
+<!--    <constructor-arg value="com.epam.services.DogCrudService"/>-->
+<!--  </bean>-->
 
 <!--  <bean id="cjlibDogServiceProxy"-->
 <!--    class="com.epam.services.transactions.CglibTransactionalDogService"-->
