@@ -1,7 +1,8 @@
 package com.epam.aop.aspects;
 
-import com.epam.jdbc.JdbcConnectionHolder;
+import com.epam.jdbc.JdbcDataSourceUtils;
 import java.util.Arrays;
+import javax.sql.DataSource;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,10 +11,10 @@ import org.aspectj.lang.annotation.Pointcut;
 @Aspect
 public class TransactionalAspect {
 
-  private final JdbcConnectionHolder jdbcConnectionHolder;
+  private final DataSource dataSource;
 
-  public TransactionalAspect(JdbcConnectionHolder jdbcConnectionHolder) {
-    this.jdbcConnectionHolder = jdbcConnectionHolder;
+  public TransactionalAspect(DataSource dataSource) {
+    this.dataSource = dataSource;
   }
 
   @Pointcut("execution(* com.epam.services.DogService.*(..))")
@@ -23,16 +24,16 @@ public class TransactionalAspect {
   @Around("addTransactionToDogService()")
   public Object addTransactionToDogServiceAdvice(ProceedingJoinPoint pjp) {
     try {
-      jdbcConnectionHolder.startTransaction();
+      JdbcDataSourceUtils.startTransaction(dataSource);
       Object result = pjp.proceed();
-      jdbcConnectionHolder.commitTransaction();
+      JdbcDataSourceUtils.commitTransaction(dataSource);
       return result;
     } catch (Throwable e) {
-      jdbcConnectionHolder.rollbackTransaction();
+      JdbcDataSourceUtils.rollbackTransaction(dataSource);
       throw new RuntimeException("Failed to execute method  " + pjp.getSignature().getName()
           + " with args " + Arrays.toString(pjp.getArgs()), e);
     } finally {
-      jdbcConnectionHolder.closeConnection();
+      JdbcDataSourceUtils.closeConnection(dataSource);
     }
   }
 }

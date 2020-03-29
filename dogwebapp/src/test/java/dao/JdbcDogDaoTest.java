@@ -2,9 +2,10 @@ package dao;
 
 
 import com.epam.dto.DogDto;
-import com.epam.jdbc.JdbcConnectionHolder;
+import com.epam.jdbc.JdbcDataSourceUtils;
 import com.epam.repositories.DogDao;
 import java.time.LocalDate;
+import javax.sql.DataSource;
 import org.h2.jdbc.JdbcSQLDataException;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,11 @@ public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
   private DogDao dogDao;
 
   @Autowired
-  private JdbcConnectionHolder jdbcConnectionHolder;
+  private DataSource dataSource;
 
   @BeforeClass
   public void setUp() {
-    jdbcConnectionHolder.createOrGetConnection();
+    JdbcDataSourceUtils.getConnection(dataSource);
   }
 
   @Test

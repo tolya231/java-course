@@ -2,7 +2,6 @@ package com.epam.repositories.jdbcDao;
 
 import com.epam.dto.DogDto;
 import com.epam.exceptions.ResourceNotFoundException;
-import com.epam.jdbc.JdbcConnectionHolder;
 import com.epam.repositories.DogDao;
 import java.sql.Connection;
 import java.sql.Date;
@@ -10,20 +9,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
+import javax.sql.DataSource;
 import lombok.SneakyThrows;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 
 public class JdbcDogDao implements DogDao {
 
-  private final JdbcConnectionHolder jdbcConnectionHolder;
+  private final DataSource dataSource;
 
-  public JdbcDogDao(JdbcConnectionHolder jdbcConnectionHolder) {
-    this.jdbcConnectionHolder = jdbcConnectionHolder;
+  public JdbcDogDao(DataSource dataSource) {
+    this.dataSource = dataSource;
   }
 
   @Override
   @SneakyThrows
   public DogDto create(DogDto dog) {
-    Connection connection = jdbcConnectionHolder.createOrGetConnection();
+    Connection connection = DataSourceUtils.getConnection(dataSource);
 
     String insert = "INSERT INTO DOG (name, weight, height, birthDay) VALUES (?, ?, ?, ?);";
     PreparedStatement preparedStatement = connection
@@ -46,7 +47,7 @@ public class JdbcDogDao implements DogDao {
   @Override
   @SneakyThrows
   public DogDto update(DogDto dog) {
-    Connection connection = jdbcConnectionHolder.createOrGetConnection();
+    Connection connection = DataSourceUtils.getConnection(dataSource);
 
     String update = "UPDATE DOG SET name=?, weight=?, height=?, birthDay=? WHERE id=?;";
     PreparedStatement preparedStatement = connection.prepareStatement(update);
@@ -67,7 +68,7 @@ public class JdbcDogDao implements DogDao {
   @Override
   @SneakyThrows
   public DogDto get(long id) {
-    Connection connection = jdbcConnectionHolder.createOrGetConnection();
+    Connection connection = DataSourceUtils.getConnection(dataSource);
 
     String select = "SELECT * FROM DOG WHERE id=?;";
     PreparedStatement preparedStatement = connection.prepareStatement(select);
@@ -90,7 +91,7 @@ public class JdbcDogDao implements DogDao {
   @Override
   @SneakyThrows
   public void delete(long id) {
-    Connection connection = jdbcConnectionHolder.createOrGetConnection();
+    Connection connection = DataSourceUtils.getConnection(dataSource);
 
     String delete = "DELETE FROM DOG WHERE id=?;";
     PreparedStatement preparedStatement = connection.prepareStatement(delete);

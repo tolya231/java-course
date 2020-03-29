@@ -1,26 +1,27 @@
 package com.epam.services.transactions;
 
-import com.epam.jdbc.JdbcConnectionHolder;
+import com.epam.jdbc.JdbcDataSourceUtils;
 import com.epam.services.DogService;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import javax.sql.DataSource;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 public class CglibTransactionalDogService implements MethodInterceptor {
 
-  private final JdbcConnectionHolder jdbcConnectionHolder;
+  private final DataSource dataSource;
   private final Object target;
 
-  private CglibTransactionalDogService(JdbcConnectionHolder jdbcConnectionHolder, Object target) {
-    this.jdbcConnectionHolder = jdbcConnectionHolder;
+  private CglibTransactionalDogService(DataSource dataSource, Object target) {
+    this.dataSource = dataSource;
     this.target = target;
   }
 
-  public static Object createProxy(JdbcConnectionHolder jdbcConnectionHolder, Object target) {
+  public static Object createProxy(DataSource dataSource, Object target) {
     CglibTransactionalDogService service = new CglibTransactionalDogService(
-        jdbcConnectionHolder, target);
+        dataSource, target);
     return Enhancer.create(DogService.class, service);
   }
 
@@ -29,16 +30,16 @@ public class CglibTransactionalDogService implements MethodInterceptor {
     Object result;
     if (method.getDeclaringClass() != Object.class) {
       try {
-        jdbcConnectionHolder.startTransaction();
+        JdbcDataSourceUtils.startTransaction(dataSource);
         result = methodProxy.invoke(target, args);
-        jdbcConnectionHolder.commitTransaction();
+        JdbcDataSourceUtils.commitTransaction(dataSource);
         return result;
       } catch (Exception e) {
-        jdbcConnectionHolder.rollbackTransaction();
+        JdbcDataSourceUtils.rollbackTransaction(dataSource);
         throw new RuntimeException("Failed to execute method with args: " + Arrays.toString(args),
             e);
       } finally {
-        jdbcConnectionHolder.closeConnection();
+        JdbcDataSourceUtils.closeConnection(dataSource);
       }
     } else {
       return methodProxy.invoke(target, args);

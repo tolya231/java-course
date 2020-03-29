@@ -6,25 +6,23 @@
 
   <bean id="inMemoryDogDao" class="com.epam.repositories.inMemory.InMemoryDogDao"/>
 
-  <bean id="jdbcConnectionHolder" class="com.epam.jdbc.JdbcConnectionHolder" depends-on="flyway">
-    <constructor-arg ref="h2dataSource"/>
-  </bean>
-
   <bean id="jdbcDogDao" class="com.epam.repositories.jdbcDao.JdbcDogDao">
-    <constructor-arg ref="jdbcConnectionHolder"/>
+    <constructor-arg ref="h2dataSource"/>
   </bean>
 
   <bean id="dogService" class="com.epam.services.DogService">
     <constructor-arg ref="jdbcDogDao"/>
   </bean>
 
+
   <aop:aspectj-autoproxy/>
-  <bean id="myAspect" class="com.epam.aop.aspects.TransactionalAspect">
-    <constructor-arg ref="jdbcConnectionHolder"/>
+  <bean id="transactionalAspect" class="com.epam.aop.aspects.TransactionalAspect">
+    <constructor-arg ref="h2dataSource"/>
   </bean>
 
-  <bean id="dynamicDogServiceProxy" class="com.epam.services.transactions.TransactionalProxy" factory-method="createProxy">
-    <constructor-arg ref="jdbcConnectionHolder"/>
+  <bean id="dynamicDogServiceProxy" class="com.epam.services.transactions.TransactionalProxy"
+    factory-method="createProxy">
+    <constructor-arg ref="h2dataSource"/>
     <constructor-arg>
       <bean class="com.epam.services.DogService">
         <constructor-arg ref="jdbcDogDao"/>
@@ -33,8 +31,10 @@
     <constructor-arg value="com.epam.services.DogCrudService"/>
   </bean>
 
-<!--  <bean id="cjlibDogServiceProxy" class="com.epam.services.transactions.CglibTransactionalDogService" factory-method="createProxy">-->
-<!--    <constructor-arg ref="jdbcConnectionHolder"/>-->
+<!--  <bean id="cjlibDogServiceProxy"-->
+<!--    class="com.epam.services.transactions.CglibTransactionalDogService"-->
+<!--    factory-method="createProxy">-->
+<!--    <constructor-arg ref="h2dataSource"/>-->
 <!--    <constructor-arg>-->
 <!--      <bean class="com.epam.services.DogService">-->
 <!--        <constructor-arg ref="jdbcDogDao"/>-->
@@ -50,8 +50,8 @@
   </bean>
 
   <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
-    <property name="baselineOnMigrate" value="true" />
-    <property name="dataSource" ref="h2dataSource" />
+    <property name="baselineOnMigrate" value="true"/>
+    <property name="dataSource" ref="h2dataSource"/>
   </bean>
 
   <!--h2-console-->

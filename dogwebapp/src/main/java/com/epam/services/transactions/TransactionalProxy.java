@@ -1,40 +1,41 @@
 package com.epam.services.transactions;
 
-import com.epam.jdbc.JdbcConnectionHolder;
+import com.epam.jdbc.JdbcDataSourceUtils;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import javax.sql.DataSource;
 
 public class TransactionalProxy implements InvocationHandler {
 
-  private final JdbcConnectionHolder jdbcConnectionHolder;
+  private final DataSource dataSource;
   private final Object target;
 
-  private TransactionalProxy(JdbcConnectionHolder jdbcConnectionHolder, Object target) {
-    this.jdbcConnectionHolder = jdbcConnectionHolder;
+  private TransactionalProxy(DataSource dataSource, Object target) {
+    this.dataSource = dataSource;
     this.target = target;
   }
 
-  public static Object createProxy(JdbcConnectionHolder jdbcConnectionHolder, Object target,
+  public static Object createProxy(DataSource dataSource, Object target,
       Class<?> interfaceToProxy) {
     return Proxy.newProxyInstance(target.getClass().getClassLoader(),
         new Class<?>[]{interfaceToProxy},
-        new TransactionalProxy(jdbcConnectionHolder, target));
+        new TransactionalProxy(dataSource, target));
   }
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
-      jdbcConnectionHolder.startTransaction();
+      JdbcDataSourceUtils.startTransaction(dataSource);
       Object result = method.invoke(target, args);
-      jdbcConnectionHolder.commitTransaction();
+      JdbcDataSourceUtils.commitTransaction(dataSource);
       return result;
     } catch (Exception e) {
-      jdbcConnectionHolder.rollbackTransaction();
+      JdbcDataSourceUtils.rollbackTransaction(dataSource);
       throw new RuntimeException("Failed to execute method with args: " + Arrays.toString(args), e);
     } finally {
-      jdbcConnectionHolder.closeConnection();
+      JdbcDataSourceUtils.closeConnection(dataSource);
     }
   }
 }
