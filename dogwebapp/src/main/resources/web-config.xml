@@ -7,7 +7,7 @@
                            http://www.springframework.org/schema/mvc/spring-mvc.xsd">
     <mvc:annotation-driven/>
     <bean id="dogController" class="com.epam.controllers.DogController">
-        <constructor-arg ref="cjlibDogServiceProxy"/>
+        <constructor-arg ref="dynamicDogServiceProxy"/>
     </bean>
 
 </beans>

@@ -11,7 +11,7 @@ public class TransactionalProxy implements InvocationHandler {
   private final JdbcConnectionHolder jdbcConnectionHolder;
   private final Object target;
 
-  public TransactionalProxy(JdbcConnectionHolder jdbcConnectionHolder, Object target) {
+  private TransactionalProxy(JdbcConnectionHolder jdbcConnectionHolder, Object target) {
     this.jdbcConnectionHolder = jdbcConnectionHolder;
     this.target = target;
   }
@@ -26,7 +26,6 @@ public class TransactionalProxy implements InvocationHandler {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
-      jdbcConnectionHolder.createOrGetConnection();
       jdbcConnectionHolder.startTransaction();
       Object result = method.invoke(target, args);
       jdbcConnectionHolder.commitTransaction();

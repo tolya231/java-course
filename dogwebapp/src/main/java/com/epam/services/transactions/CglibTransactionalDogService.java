@@ -13,7 +13,7 @@ public class CglibTransactionalDogService implements MethodInterceptor {
   private final JdbcConnectionHolder jdbcConnectionHolder;
   private final Object target;
 
-  public CglibTransactionalDogService(JdbcConnectionHolder jdbcConnectionHolder, Object target) {
+  private CglibTransactionalDogService(JdbcConnectionHolder jdbcConnectionHolder, Object target) {
     this.jdbcConnectionHolder = jdbcConnectionHolder;
     this.target = target;
   }
@@ -29,7 +29,6 @@ public class CglibTransactionalDogService implements MethodInterceptor {
     Object result;
     if (method.getDeclaringClass() != Object.class) {
       try {
-        jdbcConnectionHolder.createOrGetConnection();
         jdbcConnectionHolder.startTransaction();
         result = methodProxy.invoke(target, args);
         jdbcConnectionHolder.commitTransaction();

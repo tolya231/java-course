@@ -13,20 +13,24 @@
     <constructor-arg ref="jdbcConnectionHolder"/>
   </bean>
 
-  <bean id="dogService" class="com.epam.services.DogService">
-    <constructor-arg ref="jdbcDogDao"/>
-  </bean>
-
   <bean id="dynamicDogServiceProxy" class="com.epam.services.transactions.TransactionalProxy" factory-method="createProxy">
     <constructor-arg ref="jdbcConnectionHolder"/>
-    <constructor-arg ref="dogService"/>
+    <constructor-arg>
+      <bean class="com.epam.services.DogService">
+        <constructor-arg ref="jdbcDogDao"/>
+      </bean>
+    </constructor-arg>
     <constructor-arg value="com.epam.services.DogCrudService"/>
   </bean>
 
-  <bean id="cjlibDogServiceProxy" class="com.epam.services.transactions.CglibTransactionalDogService" factory-method="createProxy">
-    <constructor-arg ref="jdbcConnectionHolder"/>
-    <constructor-arg ref="dogService"/>
-  </bean>
+<!--  <bean id="cjlibDogServiceProxy" class="com.epam.services.transactions.CglibTransactionalDogService" factory-method="createProxy">-->
+<!--    <constructor-arg ref="jdbcConnectionHolder"/>-->
+<!--    <constructor-arg>-->
+<!--      <bean class="com.epam.services.DogService">-->
+<!--        <constructor-arg ref="jdbcDogDao"/>-->
+<!--      </bean>-->
+<!--    </constructor-arg>-->
+<!--  </bean>-->
 
 
   <bean id="h2dataSource" class="org.h2.jdbcx.JdbcDataSource" depends-on="h2Server">

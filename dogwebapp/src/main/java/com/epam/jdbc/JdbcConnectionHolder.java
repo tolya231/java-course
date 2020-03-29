@@ -24,7 +24,7 @@ public class JdbcConnectionHolder {
 
   @SneakyThrows
   public void startTransaction() {
-    Connection connection = threadLocal.get();
+    Connection connection = createOrGetConnection();
     connection.setAutoCommit(false);
   }
 
