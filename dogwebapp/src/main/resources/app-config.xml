@@ -5,21 +5,35 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+<!--  dao-->
   <bean id="inMemoryDogDao" class="com.epam.repositories.inMemory.InMemoryDogDao"/>
-
   <bean id="jdbcDogDao" class="com.epam.repositories.jdbcDao.JdbcDogDao">
     <constructor-arg ref="h2dataSource"/>
   </bean>
 
+<!--  service-->
   <bean id="dogService" class="com.epam.services.DogService">
     <constructor-arg ref="jdbcDogDao"/>
   </bean>
 
+<!--  transactions-->
   <tx:annotation-driven transaction-manager="txManager"/>
   <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="h2dataSource"/>
   </bean>
 
+
+<!--  <tx:advice id="txAdvice" transaction-manager="txManager">-->
+<!--    <tx:attributes>-->
+<!--      <tx:method name="get*" read-only="true"/>-->
+<!--      <tx:method name="*"/>-->
+<!--    </tx:attributes>-->
+<!--  </tx:advice>-->
+
+<!--  <aop:config>-->
+<!--    <aop:pointcut id="dogServiceOperation" expression="execution(* com.epam.services.*.*(..))"/>-->
+<!--    <aop:advisor advice-ref="txAdvice" pointcut-ref="dogServiceOperation"/>-->
+<!--  </aop:config>-->
 
 <!--  <aop:aspectj-autoproxy/>-->
 <!--  <bean id="transactionalAspect" class="com.epam.aop.aspects.TransactionalAspect">-->
@@ -49,6 +63,7 @@
 <!--  </bean>-->
 
 
+<!--  h2 datasource-->
   <bean id="h2dataSource" class="org.h2.jdbcx.JdbcDataSource" depends-on="h2Server">
     <property name="URL" value="jdbc:h2:mem:prod;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE"/>
     <property name="user" value="admin"/>
