@@ -5,7 +5,6 @@ import com.epam.exceptions.ResourceNotFoundException;
 import com.epam.repositories.DogDao;
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.List;
 import javax.sql.DataSource;
@@ -80,14 +79,5 @@ public class JdbcDogDao implements DogDao {
     if (count == 0) {
       throw new ResourceNotFoundException();
     }
-  }
-
-  @SneakyThrows
-  private DogDto mapDogRow(ResultSet rs, int rowNum) {
-    return new DogDto().setId(rs.getLong("id"))
-        .setWeight(rs.getInt("weight"))
-        .setHeight(rs.getInt("height"))
-        .setBirthDay(rs.getDate("birthDay").toLocalDate())
-        .setName(rs.getString("name"));
   }
 }
