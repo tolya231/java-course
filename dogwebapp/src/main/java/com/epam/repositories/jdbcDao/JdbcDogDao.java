@@ -7,7 +7,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.util.List;
-import javax.sql.DataSource;
 import lombok.SneakyThrows;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,8 +17,8 @@ public class JdbcDogDao implements DogDao {
 
   private final JdbcTemplate jdbcTemplate;
 
-  public JdbcDogDao(DataSource dataSource) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
+  public JdbcDogDao(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
   }
 
   @Override

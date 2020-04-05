@@ -2,17 +2,14 @@ package dao;
 
 
 import com.epam.dto.DogDto;
-import com.epam.jdbc.JdbcDataSourceUtils;
 import com.epam.repositories.DogDao;
 import java.time.LocalDate;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.util.Strings;
 import utils.DogGenerator;
@@ -24,14 +21,6 @@ public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
   @Autowired
   @Qualifier("jdbcDogDao")
   private DogDao dogDao;
-
-  @Autowired
-  private DataSource dataSource;
-
-  @BeforeClass
-  public void setUp() {
-    JdbcDataSourceUtils.getConnection(dataSource);
-  }
 
   @Test
   public void when_validDog_then_noExceptionThrown() {
