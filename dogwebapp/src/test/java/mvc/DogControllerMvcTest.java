@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 import utils.DogGenerator;
 
 @WebAppConfiguration
-@ContextConfiguration(locations = {"classpath:/app-config.xml", "classpath:/web-config.xml"})
+@ContextConfiguration(locations = {"classpath:/app-config.xml", "classpath:/web-config.xml", "classpath:/datasource-config.xml"})
 public class DogControllerMvcTest extends AbstractTestNGSpringContextTests {
 
   @Autowired

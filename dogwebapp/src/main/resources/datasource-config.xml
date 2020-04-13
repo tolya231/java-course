@@ -1,0 +1,18 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <!--  h2 datasource-->
+  <bean id="h2Datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+    destroy-method="close">
+    <property name="driverClass" value="org.h2.Driver"/>
+    <property name="jdbcUrl" value="jdbc:h2:mem:prod;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE"/>
+    <property name="user" value="admin"/>
+    <property name="password" value="admin"/>
+    <property name="minPoolSize" value="5"/>
+    <property name="maxPoolSize" value="10"/>
+    <property name="maxStatements" value="28"/>
+    <property name="maxStatementsPerConnection" value="8"/>
+  </bean>
+</beans>

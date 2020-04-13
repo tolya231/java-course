@@ -1,9 +1,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:aop="http://www.springframework.org/schema/aop"
   xmlns:tx="http://www.springframework.org/schema/tx"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+                           http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 <!--  dao-->
   <bean id="inMemoryDogDao" class="com.epam.repositories.inMemory.InMemoryDogDao"/>
@@ -19,7 +18,7 @@
 <!--  transactions-->
   <tx:annotation-driven transaction-manager="txManager"/>
   <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-    <property name="dataSource" ref="h2dataSourceWithC3p0"/>
+    <property name="dataSource" ref="h2Datasource"/>
   </bean>
 
 
@@ -63,26 +62,13 @@
 <!--  </bean>-->
 
 
-<!--  h2 datasource-->
-  <bean id="h2dataSourceWithC3p0" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-    destroy-method="close">
-    <property name="driverClass" value="org.h2.Driver"/>
-    <property name="jdbcUrl" value="jdbc:h2:mem:prod;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE"/>
-    <property name="user" value="admin"/>
-    <property name="password" value="admin"/>
-    <property name="minPoolSize" value="5"/>
-    <property name="maxPoolSize" value="10"/>
-    <property name="maxStatements" value="28"/>
-    <property name="maxStatementsPerConnection" value="8"/>
-  </bean>
-
   <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-    <property name="dataSource" ref="h2dataSourceWithC3p0"/>
+    <property name="dataSource" ref="h2Datasource"/>
   </bean>
 
   <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
     <property name="baselineOnMigrate" value="true"/>
-    <property name="dataSource" ref="h2dataSourceWithC3p0"/>
+    <property name="dataSource" ref="h2Datasource"/>
   </bean>
 
   <!--h2-console-->

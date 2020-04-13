@@ -15,7 +15,7 @@ import org.testng.util.Strings;
 import utils.DogGenerator;
 
 @WebAppConfiguration
-@ContextConfiguration(locations = {"classpath:/app-config.xml", "classpath:/web-config.xml"})
+@ContextConfiguration(locations = {"classpath:/app-config.xml", "classpath:/web-config.xml", "classpath:/datasource-config.xml"})
 public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
 
   @Autowired

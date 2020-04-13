@@ -1,6 +1,6 @@
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
 
     <servlet>
@@ -11,6 +11,7 @@
             <param-value>
                 classpath:web-config.xml
                 classpath:app-config.xml
+                classpath:datasource-jndi-config.xml
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
