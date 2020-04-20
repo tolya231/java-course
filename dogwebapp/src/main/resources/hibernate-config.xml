@@ -1,0 +1,29 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="sessionFactory"
+    class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" depends-on="flyway">
+    <property name="dataSource" ref="h2Datasource"/>
+    <property name="packagesToScan"
+      value="com.epam.dto"/>
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">
+          org.hibernate.dialect.H2Dialect
+        </prop>
+        <prop key="show_sql">
+          true
+        </prop>
+      </props>
+    </property>
+  </bean>
+
+<!--  transactions-->
+  <bean id="hibernateTxManager"
+    class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+</beans>

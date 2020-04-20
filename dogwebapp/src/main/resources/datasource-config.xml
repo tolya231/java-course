@@ -15,4 +15,15 @@
     <property name="maxStatements" value="28"/>
     <property name="maxStatementsPerConnection" value="8"/>
   </bean>
+
+  <!--  transactions-->
+  <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="h2Datasource"/>
+  </bean>
+
+  <!--  jdbc-->
+  <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <property name="dataSource" ref="h2Datasource"/>
+  </bean>
+
 </beans>

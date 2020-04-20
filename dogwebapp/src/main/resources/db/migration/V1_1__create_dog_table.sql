@@ -1,3 +1,5 @@
+CREATE SEQUENCE dog_seq;
+
 CREATE TABLE DOG (
   id       IDENTITY     NOT NULL PRIMARY KEY,
   name     VARCHAR(100) NOT NULL CHECK (length(name) >= 1),

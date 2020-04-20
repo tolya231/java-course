@@ -1,4 +1,4 @@
-package com.epam.repositories.jdbcDao;
+package com.epam.repositories.impl;
 
 import com.epam.dto.DogDto;
 import com.epam.exceptions.ResourceNotFoundException;

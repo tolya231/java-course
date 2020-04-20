@@ -11,7 +11,8 @@
             <param-value>
                 classpath:web-config.xml
                 classpath:app-config.xml
-                classpath:datasource-jndi-config.xml
+                classpath:datasource-config.xml
+                classpath:hibernate-config.xml
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>

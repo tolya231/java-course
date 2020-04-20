@@ -15,7 +15,11 @@ import org.testng.util.Strings;
 import utils.DogGenerator;
 
 @WebAppConfiguration
-@ContextConfiguration(locations = {"classpath:/app-config.xml", "classpath:/web-config.xml", "classpath:/datasource-config.xml"})
+@ContextConfiguration(locations = {
+    "classpath:/app-config.xml",
+    "classpath:/web-config.xml",
+    "classpath:/datasource-config.xml",
+    "classpath:/hibernate-config.xml"})
 public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
 
   @Autowired
@@ -35,7 +39,7 @@ public class JdbcDogDaoTest extends AbstractTestNGSpringContextTests {
 
   @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void when_tooLongName_then_exceptionThrown() {
-    DogDto dog = DogGenerator.dog();
+    DogDto dog = DogGenerator.dog( );
     dogDao.create(dog.setName(Strings.repeat("D", 101)));
   }
 
