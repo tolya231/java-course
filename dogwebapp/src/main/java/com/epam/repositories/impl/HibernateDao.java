@@ -3,6 +3,8 @@ package com.epam.repositories.impl;
 import com.epam.dto.DogDto;
 import com.epam.exceptions.ResourceNotFoundException;
 import com.epam.repositories.DogDao;
+import java.util.logging.Logger;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -43,11 +45,13 @@ public class HibernateDao implements DogDao {
   @Override
   public void delete(long id) {
     Session session = getCurrentSession();
-    DogDto dogDto = session.get(DogDto.class, id);
-    if (dogDto != null) {
+    DogDto dogDto = session.load(DogDto.class, id);
+    try {
+      Logger.getLogger(HibernateDao.class.getName()).info("Between load and delete");
       session.delete(dogDto);
-    } else {
-      throw new ResourceNotFoundException();
+    } catch (ObjectNotFoundException e)
+    {
+      throw new ResourceNotFoundException(e);
     }
   }
 
