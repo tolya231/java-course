@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.testng.annotations.Test;
 import org.testng.util.Strings;
 import utils.DogGenerator;
 
-@WebAppConfiguration
 @ContextConfiguration(locations = {
     "classpath:/app-config.xml",
     "classpath:/web-config.xml",

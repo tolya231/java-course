@@ -34,7 +34,7 @@ public class HibernateDao implements DogDao {
 
   @Override
   public DogDto get(long id) {
-    DogDto dogDto = getCurrentSession().get(DogDto.class, id);
+    DogDto dogDto = getCurrentSession(). get(DogDto.class, id);
     if (dogDto != null) {
       return dogDto;
     } else {

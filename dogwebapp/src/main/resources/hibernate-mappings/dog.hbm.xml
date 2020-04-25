@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="com.epam.dto.DogDto" table="DOG">
+    <id name="id" type="java.lang.Long" column="id">
+      <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
+        <param name="sequence_name">dog_seq</param>
+      </generator>
+    </id>
+    <property name="name" column="name" type="java.lang.String"/>
+    <property name="birthDay" column="birthDay" type="converted::com.epam.utils.LocalDateAttributeConverter"/>
+    <property name="weight" column="weight" type="java.lang.Integer"/>
+    <property name="height" column="height" type="java.lang.Integer"/>
+  </class>
+</hibernate-mapping>

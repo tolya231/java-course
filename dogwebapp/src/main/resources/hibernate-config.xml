@@ -8,6 +8,11 @@
     <property name="dataSource" ref="h2Datasource"/>
     <property name="packagesToScan"
       value="com.epam.dto"/>
+    <property name="mappingResources">
+      <list>
+        <value>hibernate-mappings/dog.hbm.xml</value>
+      </list>
+    </property>
     <property name="hibernateProperties">
       <props>
         <prop key="hibernate.dialect">
