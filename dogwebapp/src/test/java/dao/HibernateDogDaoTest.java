@@ -2,12 +2,10 @@ package dao;
 
 
 import com.epam.dto.DogDto;
-import com.epam.repositories.DogDao;
+import com.epam.repositories.impl.HibernateDogDao;
 import java.time.LocalDate;
 import javax.validation.ConstraintViolationException;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,83 +22,75 @@ import utils.DogGenerator;
 public class HibernateDogDaoTest extends AbstractTransactionalTestNGSpringContextTests {
 
   @Autowired
-  @Qualifier("hibernateDao")
-  private DogDao dogDao;
-
-  @Autowired
-  private SessionFactory sessionFactory;
-
-  private void flush() {
-    sessionFactory.getCurrentSession().flush();
-  }
+  private HibernateDogDao dogDao;
 
   @Test
   public void when_validDog_then_noExceptionThrown() {
     dogDao.create(DogGenerator.dog());
-    flush();
+    dogDao.flush();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_emptyName_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(""));
-    flush();
+    dogDao.flush();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_tooLongName_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(Strings.repeat("D", 101)));
-    flush();
+    dogDao.flush();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_nullName_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(null));
-    flush();
+    dogDao.flush();
   }
 
   @Test
   public void when_sqlInjectionName_then_noExceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName("\"' blah"));
-    flush();
+    dogDao.flush();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_weight_0_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setWeight(0));
-    flush();
+    dogDao.flush();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_weight_null_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setWeight(null));
-    flush();
+    dogDao.flush();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_height_0_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setHeight(0));
-    flush();
+    dogDao.flush();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_height_null_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setHeight(null));
-    flush();
+    dogDao.flush();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_birthday_notPast_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setBirthDay(LocalDate.now().plusDays(1)));
-    flush();
+    dogDao.flush();
   }
 
 }

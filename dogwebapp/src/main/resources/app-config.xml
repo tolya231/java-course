@@ -9,13 +9,13 @@
   <bean id="jdbcDogDao" class="com.epam.repositories.impl.JdbcDogDao">
     <constructor-arg ref="jdbcTemplate"/>
   </bean>
-  <bean id="hibernateDao" class="com.epam.repositories.impl.HibernateDao">
+  <bean id="hibernateDogDao" class="com.epam.repositories.impl.HibernateDogDao">
     <constructor-arg ref="sessionFactory"/>
   </bean>
 
 <!--  service-->
   <bean id="dogService" class="com.epam.services.DogService">
-    <constructor-arg ref="hibernateDao"/>
+    <constructor-arg ref="hibernateDogDao"/>
   </bean>
 
   <tx:annotation-driven transaction-manager="hibernateTxManager"/>

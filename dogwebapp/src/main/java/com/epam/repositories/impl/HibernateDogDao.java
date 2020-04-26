@@ -8,11 +8,11 @@ import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-public class HibernateDao implements DogDao {
+public class HibernateDogDao implements DogDao {
 
   private final SessionFactory sessionFactory;
 
-  public HibernateDao(SessionFactory sessionFactory) {
+  public HibernateDogDao(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
   }
 
@@ -47,7 +47,7 @@ public class HibernateDao implements DogDao {
     Session session = getCurrentSession();
     DogDto dogDto = session.load(DogDto.class, id);
     try {
-      Logger.getLogger(HibernateDao.class.getName()).info("Between load and delete");
+      Logger.getLogger(HibernateDogDao.class.getName()).info("Between load and delete");
       session.delete(dogDto);
     } catch (ObjectNotFoundException e)
     {
@@ -57,5 +57,9 @@ public class HibernateDao implements DogDao {
 
   private Session getCurrentSession() {
     return sessionFactory.getCurrentSession();
+  }
+
+  public void flush() {
+    getCurrentSession().flush();
   }
 }
