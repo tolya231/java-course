@@ -6,26 +6,18 @@
   <bean id="sessionFactory"
     class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" depends-on="flyway">
     <property name="dataSource" ref="h2Datasource"/>
-    <property name="packagesToScan"
-      value="com.epam.dto"/>
-    <property name="mappingResources">
-      <list>
-        <value>hibernate-mappings/dog.hbm.xml</value>
-      </list>
-    </property>
+    <property name="mappingLocations" value="classpath:/hibernate-mappings/*.hbm.xml"/>
     <property name="hibernateProperties">
       <props>
-        <prop key="hibernate.dialect">
-          org.hibernate.dialect.H2Dialect
-        </prop>
-        <prop key="hibernate.show_sql">
-          true
-        </prop>
+        <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+        <prop key="hibernate.show_sql">true</prop>
+        <prop key="hibernate.jdbc.batch_size">5</prop>
+        <prop key="hibernate.hbm2ddl.auto">validate</prop>
       </props>
     </property>
   </bean>
 
-<!--  transactions-->
+  <!--  transactions-->
   <bean id="hibernateTxManager"
     class="org.springframework.orm.hibernate5.HibernateTransactionManager">
     <property name="sessionFactory" ref="sessionFactory"/>

@@ -93,4 +93,12 @@ public class HibernateDogDaoTest extends AbstractTransactionalTestNGSpringContex
     dogDao.flush();
   }
 
+  @Test
+  public void when_createValidDog10times_then_2batchIsUsed() {
+    for (int i = 0; i < 100; i++) {
+      dogDao.create(DogGenerator.dog());
+    }
+    dogDao.flush();
+  }
+
 }
