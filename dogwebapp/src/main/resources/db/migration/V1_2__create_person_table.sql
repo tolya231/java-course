@@ -1,0 +1,8 @@
+CREATE SEQUENCE person_seq;
+
+CREATE TABLE PERSON (
+  id       IDENTITY     NOT NULL PRIMARY KEY,
+  name     VARCHAR(100) NOT NULL CHECK (length(name) >= 1),
+  dog LONG,
+  FOREIGN KEY (dog) REFERENCES DOG(id)
+);

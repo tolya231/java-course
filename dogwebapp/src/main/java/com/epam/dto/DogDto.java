@@ -1,6 +1,7 @@
 package com.epam.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -36,4 +37,6 @@ public class DogDto {
   @Min(1)
   @NotNull
   private Integer height;
+
+  private List<PersonDto> owners;
 }

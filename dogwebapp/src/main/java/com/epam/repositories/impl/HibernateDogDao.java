@@ -16,15 +16,14 @@ public class HibernateDogDao implements DogDao {
     this.sessionFactory = sessionFactory;
   }
 
+
   @Override
   public DogDto create(DogDto dog) {
-    Long id = (Long) getCurrentSession().save(dog);
-    DogDto dogDto = getCurrentSession().get(DogDto.class, id);
-    if (dogDto != null) {
-      return dogDto;
-    } else {
+    getCurrentSession().save(dog);
+    if (dog.getId() == null ) {
       throw new RuntimeException("Dog creation failed");
     }
+      return dog;
   }
 
   @Override
@@ -34,12 +33,16 @@ public class HibernateDogDao implements DogDao {
 
   @Override
   public DogDto get(long id) {
-    DogDto dogDto = getCurrentSession(). get(DogDto.class, id);
+    DogDto dogDto = getCurrentSession().get(DogDto.class, id);
     if (dogDto != null) {
       return dogDto;
     } else {
       throw new ResourceNotFoundException();
     }
+  }
+
+  public DogDto load(long id) {
+    return getCurrentSession().load(DogDto.class, id);
   }
 
   @Override
@@ -49,8 +52,7 @@ public class HibernateDogDao implements DogDao {
     try {
       Logger.getLogger(HibernateDogDao.class.getName()).info("Between load and delete");
       session.delete(dogDto);
-    } catch (ObjectNotFoundException e)
-    {
+    } catch (ObjectNotFoundException e) {
       throw new ResourceNotFoundException(e);
     }
   }
@@ -59,7 +61,8 @@ public class HibernateDogDao implements DogDao {
     return sessionFactory.getCurrentSession();
   }
 
-  public void flush() {
+  public void flushAndClear() {
     getCurrentSession().flush();
+    getCurrentSession().clear();
   }
 }

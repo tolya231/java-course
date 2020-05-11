@@ -27,78 +27,91 @@ public class HibernateDogDaoTest extends AbstractTransactionalTestNGSpringContex
   @Test
   public void when_validDog_then_noExceptionThrown() {
     dogDao.create(DogGenerator.dog());
-    dogDao.flush();
+    dogDao.flushAndClear();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_emptyName_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(""));
-    dogDao.flush();
+    dogDao.flushAndClear();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_tooLongName_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(Strings.repeat("D", 101)));
-    dogDao.flush();
+    dogDao.flushAndClear();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_nullName_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName(null));
-    dogDao.flush();
+    dogDao.flushAndClear();
   }
 
   @Test
   public void when_sqlInjectionName_then_noExceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setName("\"' blah"));
-    dogDao.flush();
+    dogDao.flushAndClear();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_weight_0_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setWeight(0));
-    dogDao.flush();
+    dogDao.flushAndClear();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_weight_null_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setWeight(null));
-    dogDao.flush();
+    dogDao.flushAndClear();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_height_0_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setHeight(0));
-    dogDao.flush();
+    dogDao.flushAndClear();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_height_null_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setHeight(null));
-    dogDao.flush();
+    dogDao.flushAndClear();
   }
 
   @Test(expectedExceptions = {ConstraintViolationException.class})
   public void when_birthday_notPast_then_exceptionThrown() {
     DogDto dog = DogGenerator.dog();
     dogDao.create(dog.setBirthDay(LocalDate.now().plusDays(1)));
-    dogDao.flush();
+    dogDao.flushAndClear();
   }
 
   @Test
   public void when_createValidDog10times_then_2batchIsUsed() {
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 10; i++) {
       dogDao.create(DogGenerator.dog());
     }
-    dogDao.flush();
+    dogDao.flushAndClear();
+  }
+
+  @Test
+  public void when_createValidDogWithOwners_then_getSuccessful() {
+    DogDto dog = DogGenerator.dogWithOwners(2);
+    dogDao.create(dog);
+    Long id = dog.getId();
+    dogDao.flushAndClear();
+
+    DogDto dogDto = dogDao.load(id);
+    System.out.println("Loaded dog with name: " + dogDto.getName() + "; Owners should not be loaded here");
+    System.out.println(dogDto.getOwners());
+
   }
 
 }

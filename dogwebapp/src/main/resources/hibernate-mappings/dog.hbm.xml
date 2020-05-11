@@ -13,5 +13,11 @@
     <property name="birthDay" column="birthDay" type="converted::com.epam.utils.LocalDateAttributeConverter"/>
     <property name="weight" column="weight" type="java.lang.Integer"/>
     <property name="height" column="height" type="java.lang.Integer"/>
+    <bag name="owners" table="PERSON" inverse="true" lazy="true" fetch="select" cascade="all">
+      <key>
+        <column name="id"/>
+      </key>
+      <one-to-many class="com.epam.dto.PersonDto"/>
+    </bag>
   </class>
 </hibernate-mapping>
