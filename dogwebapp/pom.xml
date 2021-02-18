@@ -14,7 +14,7 @@
   <properties>
     <encoding>UTF-8</encoding>
     <sping.version>5.2.2.RELEASE</sping.version>
-    <jackson.version>2.10.1</jackson.version>
+    <jackson.version>2.12.1</jackson.version>
     <testng.version>7.1.0</testng.version>
     <aspectj.version>1.8.2</aspectj.version>
   </properties>
